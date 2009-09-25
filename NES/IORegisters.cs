@@ -45,7 +45,7 @@ namespace NES
 					throw new ArgumentException();
 					break;
 				case 0x2007: // VRAM I/O
-					return PPU.ReadMemory8((ushort)(PPUFlags.VramAddr1 | (PPUFlags.VramAddr2 << 8)));
+					return PPU.ReadMemory8(PPUFlags.VRAMAddress);
 					break;
 				case 0x4014: // SPR-RAM DMA
 					throw new ArgumentException();
@@ -70,7 +70,7 @@ namespace NES
 					PPUFlags.Control2 = val;
 					break;
 				case 0x2002: // PPU Status
-					PPUFlags.Status = val;
+					throw new ArgumentException();
 					break;
 				case 0x2003: // SPR-RAM Address
 					PPUFlags.SprAddr = val;
@@ -79,13 +79,13 @@ namespace NES
 					PPU.WriteSprRam(val);
 					break;
 				case 0x2005: // VRAM Address 1
-					PPUFlags.VramAddr1 = val;
+					PPUFlags.VramAddrReg1 = val;
 					break;
 				case 0x2006: // VRAM Address 2
-					PPUFlags.VramAddr2 = val;
+					PPUFlags.VramAddrReg2 = val;
 					break;
 				case 0x2007: // VRAM I/O
-					PPU.ReadMemory8((ushort)(PPUFlags.VramAddr1 | (PPUFlags.VramAddr2 << 8)));
+					PPU.ReadMemory8(PPUFlags.VRAMAddress);
 					break;
 				case 0x4014: // SPR-RAM DMA
 					throw new NotImplementedException();

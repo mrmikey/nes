@@ -5,14 +5,12 @@
   </MonoDevelop.Ide.DebuggingService>
   <MonoDevelop.Ide.Workbench ActiveDocument="NES/CPU.cs" ctype="Workbench">
     <Files>
-      <File FileName="NES/CPU.cs" Line="8" Column="5" />
-      <File FileName="NES/Stack.cs" Line="42" Column="4" />
-      <File FileName="NES/Engine.cs" Line="49" Column="22" />
-      <File FileName="NES/CPUFlags.cs" Line="5" Column="18" />
-      <File FileName="NES/PPU.cs" Line="237" Column="14" />
-      <File FileName="NES/AssemblyInfo.cs" Line="1" Column="1" />
-      <File FileName="NES/PPUFlags.cs" Line="7" Column="72" />
-      <File FileName="NES/IORegisters.cs" Line="85" Column="24" />
+      <File FileName="NES/CPU.cs" Line="1723" Column="30" />
+      <File FileName="NES/Engine.cs" Line="68" Column="20" />
+      <File FileName="NES/Cartridge.cs" Line="23" Column="25" />
+      <File FileName="NES/Main.cs" Line="13" Column="2" />
+      <File FileName="NES/CPUFlags.cs" Line="32" Column="34" />
+      <File FileName="NES/Stack.cs" Line="19" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -24,6 +22,13 @@
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>this.CurrentOpCodeLength</Value>
+          <Value>this.PC</Value>
+          <Value>this</Value>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

@@ -6,44 +6,38 @@ namespace NES
 	{ 
 		// Hmm.. Should the Byte be the 'real' var and the bools be properties? hmm hmm.
 	
-		public bool Carry 
+		public bool Carry, Zero, InterruptDisable, DecimalMode, Break, Overflow, Negative;
+		public byte Byte
 		{
-			get { return ((Byte & 1) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0))); }
+			get 
+			{
+				byte	b =  toBit(Carry);
+						b |= (byte)(toBit(Zero) << 1);
+						b |= (byte)(toBit(InterruptDisable) << 2);
+						b |= (byte)(toBit(DecimalMode) << 3);
+						b |= (byte)(toBit(Break) << 4);
+						b |= (byte)(1 << 5); // convention
+						b |= (byte)(toBit(Overflow) << 6);
+						b |= (byte)(toBit(Negative) << 7);
+				return b;
+			}
+			set
+			{
+				Carry = (value & 1) > 0;
+				Zero = (value & 2) > 0;
+				InterruptDisable = (value & 4) > 0;
+				DecimalMode = (value & 8) > 0;
+				Break = (value & 16) > 0;
+				Overflow = (value & 64) > 0;
+				Negative = (value & 128) > 0;
+			}
 		}
-		public bool Zero
+		
+		private byte toBit(bool val)
 		{
-			get { return ((Byte & 2) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 1)); }
+			return (byte)((val) ? 1 : 0);
 		}
-		public bool InterruptDisable
-		{
-			get { return ((Byte & 4) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 2)); }
-		}
-		public bool DecimalMode
-		{
-			get { return ((Byte & 8) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 3)); }
-		}
-		public bool Break
-		{
-			get { return ((Byte & 16) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 4)); }
-		}
-		// 6th bit is emtpy
-		public bool Overflow
-		{
-			get { return ((Byte & 64) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 6)); }
-		}
-		public bool Negative
-		{
-			get { return ((Byte & 128) > 0); }
-			set { Byte = (byte)(Byte | (((value) ? 1 : 0) << 7)); }
-		}
-	
-		public byte Byte = 0;
+
 	}
 
 }

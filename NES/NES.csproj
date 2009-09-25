@@ -38,6 +38,7 @@
     <Compile Include="PPU.cs" />
     <Compile Include="PPUFlags.cs" />
     <Compile Include="IORegisters.cs" />
+    <Compile Include="Cartridge.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

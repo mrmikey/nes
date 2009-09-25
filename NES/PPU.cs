@@ -11,8 +11,16 @@ namespace NES
 
 	public class PPU
 	{
+		private Engine Engine;
 		public PPUFlags Flags = new PPUFlags();
 		public Mirroring Mirroring = Mirroring.Horizontal;
+		public decimal CPUScaling = 3.2m; // Number of PPU Cycles per CPU cycle [PAL; NTSC is 3]
+		public int Cycle = 0;
+		public float CycleCarry = 0;
+		public int VBlankTime = 70; // Number of Scanlines we're in VBlank for [PAL; NTSC is 20]
+		public int CurrentScaline = -1; // Pre-draw
+		public int VBlankAt = 240; // Scanline to start VBlank at
+		public int EndScanline = 240 + 1 + 1 + 70; // PAL... hardcode for now, should use VBlankTime todo
 		
 		private byte[,] PatternTables = new byte[2, 0x1000];
 		private byte[,] NameTables = new byte[4,0x3C0];
@@ -21,8 +29,64 @@ namespace NES
 		private byte[] ImagePalette = new byte[16];
 		private byte[] SpritePalette = new byte[16];
 		
-		public PPU()
+		public bool Rendering
 		{
+			get 
+			{ 
+			return true; //Todo: Check scanline# and $2002 
+			}
+		}
+		
+		public PPU(Engine engine)
+		{
+			this.Engine = engine;
+		}
+	
+		public void Run(int cpuCycles)
+		{
+			int ppuCycles = (int)((decimal)(cpuCycles + CycleCarry) * CPUScaling); // Number of ppu cycles to do
+			int endCycle = 341; // 0-340 cycles inclusive for 341 cycles total.
+			
+			// Timing!
+			for (int i = 0; i != ppuCycles; ++i)
+			{
+				++Cycle;
+				if (Cycle == 256) // Significance?
+				{
+					// Todo: handle short scanlines, see nes_emu.txt
+					endCycle = 341;
+				} else if (Cycle == 304)
+				{
+					//frame start, $2006 gets reloaded with the tmp addr
+					//this happens in the dummy scanline, and the PPU
+					//is rendering. The reason for the reload because
+					//Loopy_V is changed as the PPU is rendering.
+					//Loopy_V is the "program counter" for the PPU.
+					if ((CurrentScaline < 0) && Rendering)
+						Flags.Loopy_V = Flags.Loopy_T;
+				} else if (Cycle == endCycle)
+				{
+					++CurrentScaline;
+					Cycle = 0;
+					
+					// Start of VBlank (240 is idle)
+					if (CurrentScaline == 241)
+					{
+						// Todo: Render
+						Flags.Status |= 0x80; // Set VBlank flag in $2002
+						Flags.SprAddr = 0; // Gets reset at end of frame
+						Engine.CPU.Flags.InterruptDisable = true; // Set NMI
+					} else if (CurrentScaline == EndScanline)
+					{
+						CurrentScaline = -1;
+						// todo: this.Rendering, and short scanlines
+					}
+				} else if ((CurrentScaline < 0) && (Cycle == 1))
+				{
+					// VBlank gets cleared at cycle 1 of scanline -1
+					Flags.Status = 0; // ALL 0?!
+				}
+			}
 		}
 	
 		public byte ReadMemory8(ushort addr)

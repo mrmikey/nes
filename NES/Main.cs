@@ -6,7 +6,8 @@ namespace NES
 	{
 		public static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Engine e = new Engine("nestest.nes");
+			e.Run();
 		}
 	}
 }

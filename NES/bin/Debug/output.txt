@@ -1,7 +1,7 @@
 c000		 JMP (0x4c) 		 A:0 P:20
 c5f5		 LDX (0xa2) 		 A:0 P:22
-c5f7		 STX (0x86) 		 A:0 P:22
-c5f9		 STX (0x86) 		 A:0 P:22
+c5f7		 STX (0x86) ??[0]		 A:0 P:22
+c5f9		 STX (0x86) !![0]		 A:0 P:22
 c5fb		 STX (0x86) 		 A:0 P:22
 c5fd		 JSR (0x20) 		 A:0 P:22
 c72d		 NOP (0xea) 		 A:0 P:22
@@ -1074,7 +1074,7 @@ cfbb		 STA (0x85) 		 A:3 P:25
 cfbd		 LDA (0xa9) 		 A:0 P:27
 cfbf		 STA (0x85) 		 A:0 P:27
 cfc1		 LDA (0xa9) 		 A:4 P:25
-cfc3		 STA (0x85) 		 A:4 P:25
+cfc3		 STA (0x85) ??[4]		 A:4 P:25
 cfc5		 LDA (0xa9) 		 A:5a P:25
 cfc7		 STA (0x8d) 		 A:5a P:25
 cfca		 LDA (0xa9) 		 A:5b P:25
@@ -1084,38 +1084,40 @@ cfd1		 STA (0x8d) 		 A:5c P:25
 cfd4		 LDA (0xa9) 		 A:5d P:25
 cfd6		 STA (0x8d) 		 A:5d P:25
 cfd9		 LDX (0xa2) 		 A:5d P:27
-cfdb		 LDA (0xa1) IndirectX		 A:5a P:25
+cfdb		 LDA (0xa1) (80,X) = 80 = 200 = 5a		 A:5a P:25
 cfdd		 CMP (0xc9) 		 A:5a P:27
 cfdf		 BNE (0xd0) 		 A:5a P:27
 cfe1		 INX (0xe8) 		 A:5a P:25
 cfe2		 INX (0xe8) 		 A:5a P:25
-cfe3		 LDA (0xa1) IndirectX		 A:5b P:25
+cfe3		 LDA (0xa1) (80,X) = 82 = 300 = 5b		 A:5b P:25
 cfe5		 CMP (0xc9) 		 A:5b P:27
 cfe7		 BNE (0xd0) 		 A:5b P:27
 cfe9		 INX (0xe8) 		 A:5b P:25
-cfea		 LDA (0xa1) IndirectX		 A:5c P:25
+cfea		 LDA (0xa1) (80,X) = 83 = 303 = 5c		 A:5c P:25
 cfec		 CMP (0xc9) 		 A:5c P:27
 cfee		 BNE (0xd0) 		 A:5c P:27
 cff0		 LDX (0xa2) 		 A:5c P:27
-cff2		 LDA (0xa1) IndirectX		 A:4 P:25
-cff4		 CMP (0xc9) 		 A:4 P:a4
-cff6		 BNE (0xd0) 		 A:4 P:a4
-d000		 LDA (0xa9) 		 A:58 P:24
-d002		 STA (0x8d) 		 A:58 P:24
-d005		 LDA (0xa9) 		 A:aa P:a4
-d007		 LDX (0xa2) 		 A:aa P:26
-d009		 STA (0x81) 		 A:aa P:26
-d00b		 INX (0xe8) 		 A:aa P:24
-d00c		 INX (0xe8) 		 A:aa P:24
-d00d		 LDA (0xa9) 		 A:ab P:a4
-d00f		 STA (0x81) 		 A:ab P:a4
-d011		 INX (0xe8) 		 A:ab P:24
-d012		 LDA (0xa9) 		 A:ac P:a4
-d014		 STA (0x81) 		 A:ac P:a4
-d016		 LDX (0xa2) 		 A:ac P:26
-d018		 LDA (0xa9) 		 A:ad P:a4
-d01a		 STA (0x81) 		 A:ad P:a4
-d01c		 LDA (0xad) Absolute(512)=170		 A:aa P:a4
+cff2		 LDA (0xa1) (ff,X) = ff = 400 = 5d		 A:5d P:25
+cff4		 CMP (0xc9) 		 A:5d P:27
+cff6		 BNE (0xd0) 		 A:5d P:27
+cff8		 LDX (0xa2) 		 A:5d P:a5
+cffa		 LDA (0xa1) (ffffffff,X) = 80 = 200 = 5a		 A:5a P:25
+cffc		 CMP (0xc9) 		 A:5a P:27
+cffe		 BEQ (0xf0) 		 A:5a P:27
+d005		 LDA (0xa9) 		 A:aa P:a5
+d007		 LDX (0xa2) 		 A:aa P:27
+d009		 STA (0x81) 		 A:aa P:27
+d00b		 INX (0xe8) 		 A:aa P:25
+d00c		 INX (0xe8) 		 A:aa P:25
+d00d		 LDA (0xa9) 		 A:ab P:a5
+d00f		 STA (0x81) 		 A:ab P:a5
+d011		 INX (0xe8) 		 A:ab P:25
+d012		 LDA (0xa9) 		 A:ac P:a5
+d014		 STA (0x81) 		 A:ac P:a5
+d016		 LDX (0xa2) 		 A:ac P:27
+d018		 LDA (0xa9) 		 A:ad P:a5
+d01a		 STA (0x81) 		 A:ad P:a5
+d01c		 LDA (0xad) Absolute(512)=170		 A:aa P:a5
 d01f		 CMP (0xc9) 		 A:aa P:27
 d021		 BNE (0xd0) 		 A:aa P:27
 d023		 LDA (0xad) Absolute(768)=171		 A:ab P:a5
@@ -1124,27 +1126,25 @@ d028		 BNE (0xd0) 		 A:ab P:27
 d02a		 LDA (0xad) Absolute(771)=172		 A:ac P:a5
 d02d		 CMP (0xc9) 		 A:ac P:27
 d02f		 BNE (0xd0) 		 A:ac P:27
-d031		 LDA (0xad) Absolute(1024)=93		 A:5d P:25
-d034		 CMP (0xc9) 		 A:5d P:a4
-d036		 BEQ (0xf0) 		 A:5d P:a4
-d038		 LDA (0xa9) 		 A:59 P:24
-d03a		 STA (0x8d) 		 A:59 P:24
-d03d		 LDA (0xad) Absolute(2047)=89		 A:59 P:24
-d040		 STA (0x85) 		 A:59 P:24
-d042		 LDA (0xa9) 		 A:0 P:26
-d044		 STA (0x8d) 		 A:0 P:26
-d047		 LDA (0xa9) 		 A:aa P:a4
-d049		 STA (0x8d) 		 A:aa P:a4
-d04c		 LDX (0xa2) 		 A:aa P:26
-d04e		 LDY (0xa0) 		 A:aa P:24
-d050		 JSR (0x20) 		 A:aa P:24
+d031		 LDA (0xad) Absolute(1024)=173		 A:ad P:a5
+d034		 CMP (0xc9) 		 A:ad P:27
+d036		 BEQ (0xf0) 		 A:ad P:27
+d03d		 LDA (0xad) Absolute(2047)=0		 A:0 P:27
+d040		 STA (0x85) ??[0]		 A:0 P:27
+d042		 LDA (0xa9) 		 A:0 P:27
+d044		 STA (0x8d) 		 A:0 P:27
+d047		 LDA (0xa9) 		 A:aa P:a5
+d049		 STA (0x8d) 		 A:aa P:a5
+d04c		 LDX (0xa2) 		 A:aa P:27
+d04e		 LDY (0xa0) 		 A:aa P:25
+d050		 JSR (0x20) 		 A:aa P:25
 f7b6		 CLC (0x18) 		 A:aa P:24
 f7b7		 LDA (0xa9) 		 A:ff P:a4
 f7b9		 STA (0x85) 		 A:ff P:a4
 f7bb		 BIT (0x24) ZeroPage(1)=255		 A:ff P:e4
 f7bd		 LDA (0xa9) 		 A:55 P:64
 f7bf		 RTS (0x60) 		 A:55 P:64
-d053		 ORA (0x01) IndirectX		 A:ff P:e4
+d053		 ORA (0x01) (80,X) = 80 = 200 = aa		 A:ff P:e4
 d055		 JSR (0x20) 		 A:ff P:e4
 f7c0		 BCS (0xb0) 		 A:ff P:e4
 f7c2		 BPL (0x10) 		 A:ff P:e4
@@ -1158,7 +1158,7 @@ f7ce		 SEC (0x38) 		 A:ff P:65
 f7cf		 CLV (0xB8) 		 A:ff P:25
 f7d0		 LDA (0xa9) 		 A:0 P:27
 f7d2		 RTS (0x60) 		 A:0 P:27
-d05c		 ORA (0x01) IndirectX		 A:0 P:27
+d05c		 ORA (0x01) (82,X) = 82 = 300 = 0		 A:0 P:27
 d05e		 JSR (0x20) 		 A:0 P:27
 f7d3		 BNE (0xd0) 		 A:0 P:27
 f7d5		 BVS (0x70) 		 A:0 P:27
@@ -1171,7 +1171,7 @@ f7df		 CLC (0x18) 		 A:0 P:24
 f7e0		 BIT (0x24) ZeroPage(1)=255		 A:0 P:e6
 f7e2		 LDA (0xa9) 		 A:55 P:64
 f7e4		 RTS (0x60) 		 A:55 P:64
-d065		 AND (0x21) IndirectX		 A:0 P:66
+d065		 AND (0x21) (80,X) = 80 = 200 = aa		 A:0 P:66
 d067		 JSR (0x20) 		 A:0 P:66
 f7e5		 BNE (0xd0) 		 A:0 P:66
 f7e7		 BVC (0x50) 		 A:0 P:66
@@ -1186,7 +1186,7 @@ f7f1		 SEC (0x38) 		 A:ef P:e5
 f7f2		 CLV (0xB8) 		 A:ef P:a5
 f7f3		 LDA (0xa9) 		 A:f8 P:a5
 f7f5		 RTS (0x60) 		 A:f8 P:a5
-d073		 AND (0x21) IndirectX		 A:e8 P:a5
+d073		 AND (0x21) (82,X) = 82 = 300 = ef		 A:e8 P:a5
 d075		 JSR (0x20) 		 A:e8 P:a5
 f7f6		 BCC (0x90) 		 A:e8 P:a5
 f7f8		 BPL (0x10) 		 A:e8 P:a5
@@ -1200,7 +1200,7 @@ f804		 CLC (0x18) 		 A:e8 P:24
 f805		 BIT (0x24) ZeroPage(1)=255		 A:e8 P:e4
 f807		 LDA (0xa9) 		 A:5f P:64
 f809		 RTS (0x60) 		 A:5f P:64
-d07c		 EOR (0x41) IndirectX		 A:f5 P:e4
+d07c		 EOR (0x41) (80,X) = 80 = 200 = aa		 A:f5 P:e4
 d07e		 JSR (0x20) 		 A:f5 P:e4
 f80a		 BCS (0xb0) 		 A:f5 P:e4
 f80c		 BPL (0x10) 		 A:f5 P:e4
@@ -1216,7 +1216,7 @@ f818		 SEC (0x38) 		 A:70 P:65
 f819		 CLV (0xB8) 		 A:70 P:25
 f81a		 LDA (0xa9) 		 A:70 P:25
 f81c		 RTS (0x60) 		 A:70 P:25
-d08a		 EOR (0x41) IndirectX		 A:0 P:27
+d08a		 EOR (0x41) (82,X) = 82 = 300 = 70		 A:0 P:27
 d08c		 JSR (0x20) 		 A:0 P:27
 f81d		 BNE (0xd0) 		 A:0 P:27
 f81f		 BVS (0x70) 		 A:0 P:27
@@ -1231,7 +1231,7 @@ f829		 CLC (0x18) 		 A:69 P:24
 f82a		 BIT (0x24) ZeroPage(1)=255		 A:69 P:e4
 f82c		 LDA (0xa9) 		 A:0 P:66
 f82e		 RTS (0x60) 		 A:0 P:66
-d098		 ADC (0x61) IndirectX		 A:69 P:24
+d098		 ADC (0x61) (80,X) = 80 = 200 = 69		 A:69 P:24
 d09a		 JSR (0x20) 		 A:69 P:24
 f82f		 BMI (0x30) 		 A:69 P:24
 f831		 BCS (0xb0) 		 A:69 P:24
@@ -1245,7 +1245,7 @@ f83d		 SEC (0x38) 		 A:69 P:25
 f83e		 BIT (0x24) ZeroPage(1)=255		 A:69 P:e5
 f840		 LDA (0xa9) 		 A:0 P:67
 f842		 RTS (0x60) 		 A:0 P:67
-d0a1		 ADC (0x61) IndirectX		 A:6a P:24
+d0a1		 ADC (0x61) (80,X) = 80 = 200 = 69		 A:6a P:24
 d0a3		 JSR (0x20) 		 A:6a P:24
 f843		 BMI (0x30) 		 A:6a P:24
 f845		 BCS (0xb0) 		 A:6a P:24
@@ -1261,7 +1261,7 @@ f851		 SEC (0x38) 		 A:7f P:25
 f852		 CLV (0xB8) 		 A:7f P:25
 f853		 LDA (0xa9) 		 A:7f P:25
 f855		 RTS (0x60) 		 A:7f P:25
-d0af		 ADC (0x61) IndirectX		 A:ff P:e4
+d0af		 ADC (0x61) (80,X) = 80 = 200 = 7f		 A:ff P:e4
 d0b1		 JSR (0x20) 		 A:ff P:e4
 f856		 BPL (0x10) 		 A:ff P:e4
 f858		 BCS (0xb0) 		 A:ff P:e4
@@ -1277,7 +1277,7 @@ f864		 CLC (0x18) 		 A:80 P:e4
 f865		 BIT (0x24) ZeroPage(1)=255		 A:80 P:e4
 f867		 LDA (0xa9) 		 A:7f P:64
 f869		 RTS (0x60) 		 A:7f P:64
-d0bd		 ADC (0x61) IndirectX		 A:ff P:a4
+d0bd		 ADC (0x61) (80,X) = 80 = 200 = 80		 A:ff P:a4
 d0bf		 JSR (0x20) 		 A:ff P:a4
 f86a		 BPL (0x10) 		 A:ff P:a4
 f86c		 BCS (0xb0) 		 A:ff P:a4
@@ -1291,7 +1291,7 @@ f878		 SEC (0x38) 		 A:ff P:25
 f879		 CLV (0xB8) 		 A:ff P:25
 f87a		 LDA (0xa9) 		 A:7f P:25
 f87c		 RTS (0x60) 		 A:7f P:25
-d0c6		 ADC (0x61) IndirectX		 A:0 P:27
+d0c6		 ADC (0x61) (80,X) = 80 = 200 = 80		 A:0 P:27
 d0c8		 JSR (0x20) 		 A:0 P:27
 f87d		 BNE (0xd0) 		 A:0 P:27
 f87f		 BMI (0x30) 		 A:0 P:27
@@ -1305,7 +1305,7 @@ d0d1		 JSR (0x20) 		 A:40 P:25
 f889		 BIT (0x24) ZeroPage(1)=255		 A:40 P:e5
 f88b		 LDA (0xa9) 		 A:40 P:65
 f88d		 RTS (0x60) 		 A:40 P:65
-d0d4		 CMP (0xc1) IndirectX		 A:40 P:67
+d0d4		 CMP (0xc1) (80,X) = 80 = 200 = 40		 A:40 P:67
 d0d6		 JSR (0x20) 		 A:40 P:67
 f88e		 BMI (0x30) 		 A:40 P:67
 f890		 BCC (0x90) 		 A:40 P:67
@@ -1320,7 +1320,7 @@ d0e0		 PLA (0x68) 		 A:40 P:65
 d0e1		 JSR (0x20) 		 A:40 P:65
 f89a		 CLV (0xB8) 		 A:40 P:25
 f89b		 RTS (0x60) 		 A:40 P:25
-d0e4		 CMP (0xc1) IndirectX		 A:40 P:25
+d0e4		 CMP (0xc1) (80,X) = 80 = 200 = 3f		 A:40 P:25
 d0e6		 JSR (0x20) 		 A:40 P:25
 f89c		 BEQ (0xf0) 		 A:40 P:25
 f89e		 BMI (0x30) 		 A:40 P:25
@@ -1332,7 +1332,7 @@ d0ea		 PHA (0x48) 		 A:40 P:25
 d0eb		 LDA (0xa9) 		 A:41 P:25
 d0ed		 STA (0x8d) 		 A:41 P:25
 d0f0		 PLA (0x68) 		 A:40 P:25
-d0f1		 CMP (0xc1) IndirectX		 A:40 P:a4
+d0f1		 CMP (0xc1) (80,X) = 80 = 200 = 41		 A:40 P:a4
 d0f3		 JSR (0x20) 		 A:40 P:a4
 f8a8		 BEQ (0xf0) 		 A:40 P:a4
 f8aa		 BPL (0x10) 		 A:40 P:a4
@@ -1346,7 +1346,7 @@ d0fd		 PLA (0x68) 		 A:40 P:24
 d0fe		 JSR (0x20) 		 A:40 P:24
 f8b2		 LDA (0xa9) 		 A:80 P:a4
 f8b4		 RTS (0x60) 		 A:80 P:a4
-d101		 CMP (0xc1) IndirectX		 A:80 P:a5
+d101		 CMP (0xc1) (80,X) = 80 = 200 = 0		 A:80 P:a5
 d103		 JSR (0x20) 		 A:80 P:a5
 f8b5		 BEQ (0xf0) 		 A:80 P:a5
 f8b7		 BPL (0x10) 		 A:80 P:a5
@@ -1357,7 +1357,7 @@ d107		 PHA (0x48) 		 A:80 P:25
 d108		 LDA (0xa9) 		 A:80 P:a5
 d10a		 STA (0x8d) 		 A:80 P:a5
 d10d		 PLA (0x68) 		 A:80 P:a5
-d10e		 CMP (0xc1) IndirectX		 A:80 P:27
+d10e		 CMP (0xc1) (80,X) = 80 = 200 = 80		 A:80 P:27
 d110		 JSR (0x20) 		 A:80 P:27
 f8bf		 BNE (0xd0) 		 A:80 P:27
 f8c1		 BMI (0x30) 		 A:80 P:27
@@ -1368,7 +1368,7 @@ d114		 PHA (0x48) 		 A:80 P:25
 d115		 LDA (0xa9) 		 A:81 P:a5
 d117		 STA (0x8d) 		 A:81 P:a5
 d11a		 PLA (0x68) 		 A:80 P:a5
-d11b		 CMP (0xc1) IndirectX		 A:80 P:a4
+d11b		 CMP (0xc1) (80,X) = 80 = 200 = 81		 A:80 P:a4
 d11d		 JSR (0x20) 		 A:80 P:a4
 f8c9		 BCS (0xb0) 		 A:80 P:a4
 f8cb		 BEQ (0xf0) 		 A:80 P:a4
@@ -1379,7 +1379,7 @@ d121		 PHA (0x48) 		 A:80 P:24
 d122		 LDA (0xa9) 		 A:7f P:24
 d124		 STA (0x8d) 		 A:7f P:24
 d127		 PLA (0x68) 		 A:80 P:a4
-d128		 CMP (0xc1) IndirectX		 A:80 P:25
+d128		 CMP (0xc1) (80,X) = 80 = 200 = 7f		 A:80 P:25
 d12a		 JSR (0x20) 		 A:80 P:25
 f8d3		 BCC (0x90) 		 A:80 P:25
 f8d5		 BEQ (0xf0) 		 A:80 P:25
@@ -1393,7 +1393,7 @@ f931		 BIT (0x24) ZeroPage(1)=255		 A:40 P:e5
 f933		 LDA (0xa9) 		 A:40 P:65
 f935		 SEC (0x38) 		 A:40 P:65
 f936		 RTS (0x60) 		 A:40 P:65
-d136		 SBC (0xe1) IndirectX		 A:0 P:27
+d136		 SBC (0xe1) (80,X) = 80 = 200 = 40		 A:0 P:27
 d138		 JSR (0x20) 		 A:0 P:27
 f937		 BMI (0x30) 		 A:0 P:27
 f939		 BCC (0x90) 		 A:0 P:27
@@ -1410,7 +1410,7 @@ f947		 CLV (0xB8) 		 A:3f P:25
 f948		 SEC (0x38) 		 A:3f P:25
 f949		 LDA (0xa9) 		 A:40 P:25
 f94b		 RTS (0x60) 		 A:40 P:25
-d144		 SBC (0xe1) IndirectX		 A:1 P:25
+d144		 SBC (0xe1) (80,X) = 80 = 200 = 3f		 A:1 P:25
 d146		 JSR (0x20) 		 A:1 P:25
 f94c		 BEQ (0xf0) 		 A:1 P:25
 f94e		 BMI (0x30) 		 A:1 P:25
@@ -1427,7 +1427,7 @@ f95c		 LDA (0xa9) 		 A:40 P:25
 f95e		 SEC (0x38) 		 A:40 P:25
 f95f		 BIT (0x24) ZeroPage(1)=255		 A:40 P:e5
 f961		 RTS (0x60) 		 A:40 P:e5
-d152		 SBC (0xe1) IndirectX		 A:ff P:a4
+d152		 SBC (0xe1) (80,X) = 80 = 200 = 41		 A:ff P:a4
 d154		 JSR (0x20) 		 A:ff P:a4
 f962		 BCS (0xb0) 		 A:ff P:a4
 f964		 BEQ (0xf0) 		 A:ff P:a4
@@ -1443,7 +1443,7 @@ d15d		 JSR (0x20) 		 A:0 P:27
 f972		 CLC (0x18) 		 A:0 P:26
 f973		 LDA (0xa9) 		 A:80 P:a4
 f975		 RTS (0x60) 		 A:80 P:a4
-d160		 SBC (0xe1) IndirectX		 A:7f P:65
+d160		 SBC (0xe1) (80,X) = 80 = 200 = 0		 A:7f P:65
 d162		 JSR (0x20) 		 A:7f P:65
 f976		 BCC (0x90) 		 A:7f P:65
 f978		 CMP (0xc9) 		 A:7f P:67
@@ -1456,7 +1456,7 @@ d16b		 JSR (0x20) 		 A:7f P:65
 f980		 SEC (0x38) 		 A:7f P:65
 f981		 LDA (0xa9) 		 A:81 P:e5
 f983		 RTS (0x60) 		 A:81 P:e5
-d16e		 SBC (0xe1) IndirectX		 A:2 P:65
+d16e		 SBC (0xe1) (80,X) = 80 = 200 = 7f		 A:2 P:65
 d170		 JSR (0x20) 		 A:2 P:65
 f984		 BVC (0x50) 		 A:2 P:65
 f986		 BCC (0x90) 		 A:2 P:65
@@ -3055,19 +3055,19 @@ d940		 LDA (0xb1) (97),Y = ffff @ 10033 = a3		 A:a3 P:e5
 d942		 CMP (0xc9) 		 A:a3 P:67
 d944		 BNE (0xd0) 		 A:a3 P:67
 d946		 BCS (0xb0) 		 A:a3 P:67
-d94c		 LDA (0xa5) ZeroPage(0)=89		 A:59 P:65
-d94e		 PHA (0x48) 		 A:59 P:65
+d94c		 LDA (0xa5) ZeroPage(0)=0		 A:0 P:67
+d94e		 PHA (0x48) 		 A:0 P:67
 d94f		 LDA (0xa9) 		 A:46 P:65
 d951		 STA (0x85) 		 A:46 P:65
 d953		 LDA (0xa9) 		 A:1 P:65
-d955		 STA (0x85) 		 A:1 P:65
+d955		 STA (0x85) ??[1]		 A:1 P:65
 d957		 LDY (0xa0) 		 A:1 P:e5
 d959		 LDA (0xb1) (ff),Y = 146 @ 245 = 12		 A:12 P:65
 d95b		 CMP (0xc9) 		 A:12 P:67
 d95d		 BEQ (0xf0) 		 A:12 P:67
-d963		 PLA (0x68) 		 A:59 P:65
-d964		 STA (0x85) 		 A:59 P:65
-d966		 LDX (0xa2) 		 A:59 P:e5
+d963		 PLA (0x68) 		 A:0 P:67
+d964		 STA (0x85) ??[0]		 A:0 P:67
+d966		 LDX (0xa2) 		 A:0 P:e5
 d968		 LDA (0xa9) 		 A:0 P:67
 d96a		 STA (0x85) 		 A:0 P:67
 d96c		 LDA (0xa9) 		 A:4 P:65
@@ -3247,10 +3247,10 @@ dad7		 BCC (0x90) 		 A:80 P:25
 dad9		 BEQ (0xf0) 		 A:80 P:25
 dadb		 BPL (0x10) 		 A:80 P:25
 dadf		 RTS (0x60) 		 A:80 P:25
-c61b		 LDA (0xa5) ZeroPage(0)=89		 A:59 P:25
-c61d		 STA (0x85) 		 A:59 P:25
+c61b		 LDA (0xa5) ZeroPage(0)=0		 A:0 P:27
+c61d		 STA (0x85) !![0]		 A:0 P:27
 c61f		 LDA (0xa9) 		 A:0 P:27
-c621		 STA (0x85) 		 A:0 P:27
+c621		 STA (0x85) ??[0]		 A:0 P:27
 c623		 JSR (0x20) 		 A:0 P:27
 dae0		 LDA (0xa9) 		 A:0 P:27
 dae2		 STA (0x85) 		 A:0 P:27
@@ -5257,7 +5257,7 @@ e53e		 STA (0x85) 		 A:ff P:a5
 e540		 BIT (0x24) ZeroPage(1)=255		 A:ff P:e5
 e542		 SEC (0x38) 		 A:ff P:e5
 e543		 LDA (0xa9) 		 A:0 P:67
-e545		 LAXu (0xa3) IndirectX		 A:55 P:65
+e545		 LAXu (0xa3) (40,X) = 43 = 580 = 55		 A:55 P:65
 e547		 NOP (0xea) 		 A:55 P:65
 e548		 NOP (0xea) 		 A:55 P:65
 e549		 NOP (0xea) 		 A:55 P:65
@@ -5277,7 +5277,7 @@ e565		 LDY (0xa0) 		 A:55 P:65
 e567		 CLV (0xB8) 		 A:55 P:25
 e568		 CLC (0x18) 		 A:55 P:24
 e569		 LDA (0xa9) 		 A:0 P:26
-e56b		 LAXu (0xa3) IndirectX		 A:aa P:a4
+e56b		 LAXu (0xa3) (40,X) = 45 = 432 = aa		 A:aa P:a4
 e56d		 NOP (0xea) 		 A:aa P:a4
 e56e		 NOP (0xea) 		 A:aa P:a4
 e56f		 NOP (0xea) 		 A:aa P:a4
@@ -5436,7 +5436,7 @@ e69e		 LDY (0xa0) 		 A:32 P:25
 e6a0		 BIT (0x24) ZeroPage(1)=255		 A:32 P:e5
 e6a2		 SEC (0x38) 		 A:32 P:e5
 e6a3		 LDA (0xa9) 		 A:0 P:67
-e6a5		 LAXu (0xb7) ZeroPageY(16, 87)=89		 A:87 P:e5
+e6a5		 LAXu (0xb7) ZeroPageY(16, 87)=0		 A:87 P:e5
 e6a7		 NOP (0xea) 		 A:87 P:e5
 e6a8		 NOP (0xea) 		 A:87 P:e5
 e6a9		 NOP (0xea) 		 A:87 P:e5
@@ -5825,7 +5825,7 @@ fa31		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
 fa33		 CLC (0x18) 		 A:eb P:e4
 fa34		 LDA (0xa9) 		 A:40 P:64
 fa36		 RTS (0x60) 		 A:40 P:64
-e92e		 DCPu (0xc3) IndirectX		 A:40 P:64
+e92e		 DCPu (0xc3) (45,X) = 47 = 647 = eb		 A:40 P:64
 e930		 NOP (0xea) 		 A:40 P:64
 e931		 NOP (0xea) 		 A:40 P:64
 e932		 NOP (0xea) 		 A:40 P:64
@@ -5848,7 +5848,7 @@ fa42		 CLV (0xB8) 		 A:0 P:27
 fa43		 SEC (0x38) 		 A:0 P:27
 fa44		 LDA (0xa9) 		 A:ff P:a5
 fa46		 RTS (0x60) 		 A:ff P:a5
-e949		 DCPu (0xc3) IndirectX		 A:ff P:27
+e949		 DCPu (0xc3) (45,X) = 47 = 647 = 0		 A:ff P:27
 e94b		 NOP (0xea) 		 A:ff P:27
 e94c		 NOP (0xea) 		 A:ff P:27
 e94d		 NOP (0xea) 		 A:ff P:27
@@ -5871,7 +5871,7 @@ e961		 JSR (0x20) 		 A:37 P:25
 fa54		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
 fa56		 LDA (0xa9) 		 A:f0 P:e5
 fa58		 RTS (0x60) 		 A:f0 P:e5
-e964		 DCPu (0xc3) IndirectX		 A:f0 P:e5
+e964		 DCPu (0xc3) (45,X) = 47 = 647 = 37		 A:f0 P:e5
 e966		 NOP (0xea) 		 A:f0 P:e5
 e967		 NOP (0xea) 		 A:f0 P:e5
 e968		 NOP (0xea) 		 A:f0 P:e5
@@ -6348,3 +6348,2646 @@ fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
 fab3		 CLC (0x18) 		 A:eb P:e4
 fab4		 LDA (0xa9) 		 A:40 P:64
 fab6		 RTS (0x60) 		 A:40 P:64
+eb9e		 ISPu (0xe3) (45,X) = 47 = 647 = eb		 A:53 P:24
+eba0		 NOP (0xea) 		 A:53 P:24
+eba1		 NOP (0xea) 		 A:53 P:24
+eba2		 NOP (0xea) 		 A:53 P:24
+eba3		 NOP (0xea) 		 A:53 P:24
+eba4		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+eba7		 LDA (0xad) Absolute(1607)=236		 A:ec P:a5
+ebaa		 CMP (0xc9) 		 A:ec P:27
+ebac		 BEQ (0xf0) 		 A:ec P:27
+ebb0		 INY (0xc8) 		 A:ec P:a5
+ebb1		 LDA (0xa9) 		 A:ff P:a5
+ebb3		 STA (0x8d) 		 A:ff P:a5
+ebb6		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ebb9		 ISPu (0xe3) (45,X) = 47 = 647 = ff		 A:ff P:a5
+ebbb		 NOP (0xea) 		 A:ff P:a5
+ebbc		 NOP (0xea) 		 A:ff P:a5
+ebbd		 NOP (0xea) 		 A:ff P:a5
+ebbe		 NOP (0xea) 		 A:ff P:a5
+ebbf		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ebc2		 LDA (0xad) Absolute(1607)=0		 A:0 P:27
+ebc5		 CMP (0xc9) 		 A:0 P:27
+ebc7		 BEQ (0xf0) 		 A:0 P:27
+ebcb		 INY (0xc8) 		 A:0 P:a5
+ebcc		 LDA (0xa9) 		 A:37 P:25
+ebce		 STA (0x8d) 		 A:37 P:25
+ebd1		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ebd4		 ISPu (0xe3) (45,X) = 47 = 647 = 37		 A:b8 P:a5
+ebd6		 NOP (0xea) 		 A:b8 P:a5
+ebd7		 NOP (0xea) 		 A:b8 P:a5
+ebd8		 NOP (0xea) 		 A:b8 P:a5
+ebd9		 NOP (0xea) 		 A:b8 P:a5
+ebda		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ebdd		 LDA (0xad) Absolute(1607)=56		 A:38 P:25
+ebe0		 CMP (0xc9) 		 A:38 P:27
+ebe2		 BEQ (0xf0) 		 A:38 P:27
+ebe6		 INY (0xc8) 		 A:38 P:a5
+ebe7		 LDA (0xa9) 		 A:eb P:a5
+ebe9		 STA (0x85) 		 A:eb P:a5
+ebeb		 JSR (0x20) 		 A:eb P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
+fab3		 CLC (0x18) 		 A:eb P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+ebee		 ISPu (0xe7) ZeroPage(71)=235		 A:53 P:24
+ebf0		 NOP (0xea) 		 A:53 P:24
+ebf1		 NOP (0xea) 		 A:53 P:24
+ebf2		 NOP (0xea) 		 A:53 P:24
+ebf3		 NOP (0xea) 		 A:53 P:24
+ebf4		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+ebf7		 LDA (0xa5) ZeroPage(71)=236		 A:ec P:a5
+ebf9		 CMP (0xc9) 		 A:ec P:27
+ebfb		 BEQ (0xf0) 		 A:ec P:27
+ebff		 INY (0xc8) 		 A:ec P:a5
+ec00		 LDA (0xa9) 		 A:ff P:a5
+ec02		 STA (0x85) 		 A:ff P:a5
+ec04		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ec07		 ISPu (0xe7) ZeroPage(71)=255		 A:ff P:a5
+ec09		 NOP (0xea) 		 A:ff P:a5
+ec0a		 NOP (0xea) 		 A:ff P:a5
+ec0b		 NOP (0xea) 		 A:ff P:a5
+ec0c		 NOP (0xea) 		 A:ff P:a5
+ec0d		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ec10		 LDA (0xa5) ZeroPage(71)=0		 A:0 P:27
+ec12		 CMP (0xc9) 		 A:0 P:27
+ec14		 BEQ (0xf0) 		 A:0 P:27
+ec18		 INY (0xc8) 		 A:0 P:a5
+ec19		 LDA (0xa9) 		 A:37 P:25
+ec1b		 STA (0x85) 		 A:37 P:25
+ec1d		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ec20		 ISPu (0xe7) ZeroPage(71)=55		 A:b8 P:a5
+ec22		 NOP (0xea) 		 A:b8 P:a5
+ec23		 NOP (0xea) 		 A:b8 P:a5
+ec24		 NOP (0xea) 		 A:b8 P:a5
+ec25		 NOP (0xea) 		 A:b8 P:a5
+ec26		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ec29		 LDA (0xa5) ZeroPage(71)=56		 A:38 P:25
+ec2b		 CMP (0xc9) 		 A:38 P:27
+ec2d		 BEQ (0xf0) 		 A:38 P:27
+ec31		 INY (0xc8) 		 A:38 P:a5
+ec32		 LDA (0xa9) 		 A:eb P:a5
+ec34		 STA (0x8d) 		 A:eb P:a5
+ec37		 JSR (0x20) 		 A:eb P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
+fab3		 CLC (0x18) 		 A:eb P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+ec3a		 ISPu (0xef) Absolute(1607)=235		 A:53 P:24
+ec3d		 NOP (0xea) 		 A:53 P:24
+ec3e		 NOP (0xea) 		 A:53 P:24
+ec3f		 NOP (0xea) 		 A:53 P:24
+ec40		 NOP (0xea) 		 A:53 P:24
+ec41		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+ec44		 LDA (0xad) Absolute(1607)=236		 A:ec P:a5
+ec47		 CMP (0xc9) 		 A:ec P:27
+ec49		 BEQ (0xf0) 		 A:ec P:27
+ec4d		 INY (0xc8) 		 A:ec P:a5
+ec4e		 LDA (0xa9) 		 A:ff P:a5
+ec50		 STA (0x8d) 		 A:ff P:a5
+ec53		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ec56		 ISPu (0xef) Absolute(1607)=255		 A:ff P:a5
+ec59		 NOP (0xea) 		 A:ff P:a5
+ec5a		 NOP (0xea) 		 A:ff P:a5
+ec5b		 NOP (0xea) 		 A:ff P:a5
+ec5c		 NOP (0xea) 		 A:ff P:a5
+ec5d		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ec60		 LDA (0xad) Absolute(1607)=0		 A:0 P:27
+ec63		 CMP (0xc9) 		 A:0 P:27
+ec65		 BEQ (0xf0) 		 A:0 P:27
+ec69		 INY (0xc8) 		 A:0 P:a5
+ec6a		 LDA (0xa9) 		 A:37 P:25
+ec6c		 STA (0x8d) 		 A:37 P:25
+ec6f		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ec72		 ISPu (0xef) Absolute(1607)=55		 A:b8 P:a5
+ec75		 NOP (0xea) 		 A:b8 P:a5
+ec76		 NOP (0xea) 		 A:b8 P:a5
+ec77		 NOP (0xea) 		 A:b8 P:a5
+ec78		 NOP (0xea) 		 A:b8 P:a5
+ec79		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ec7c		 LDA (0xad) Absolute(1607)=56		 A:38 P:25
+ec7f		 CMP (0xc9) 		 A:38 P:27
+ec81		 BEQ (0xf0) 		 A:38 P:27
+ec85		 LDA (0xa9) 		 A:eb P:a5
+ec87		 STA (0x8d) 		 A:eb P:a5
+ec8a		 LDA (0xa9) 		 A:48 P:25
+ec8c		 STA (0x85) 		 A:48 P:25
+ec8e		 LDA (0xa9) 		 A:5 P:25
+ec90		 STA (0x85) 		 A:5 P:25
+ec92		 LDY (0xa0) 		 A:5 P:a5
+ec94		 JSR (0x20) 		 A:5 P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:5 P:e5
+fab3		 CLC (0x18) 		 A:5 P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+ec97		 ISPu (0xf3) (45),Y = 548 @ 647 = eb		 A:53 P:24
+ec99		 NOP (0xea) 		 A:53 P:24
+ec9a		 NOP (0xea) 		 A:53 P:24
+ec9b		 PHP (0x08) 		 A:53 P:24
+ec9c		 PHA (0x48) 		 A:53 P:24
+ec9d		 LDY (0xa0) 		 A:53 P:a4
+ec9f		 PLA (0x68) 		 A:53 P:24
+eca0		 PLP (0x28) 		 A:53 P:24
+eca1		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+eca4		 LDA (0xad) Absolute(1607)=236		 A:ec P:a5
+eca7		 CMP (0xc9) 		 A:ec P:27
+eca9		 BEQ (0xf0) 		 A:ec P:27
+ecad		 LDY (0xa0) 		 A:ec P:a5
+ecaf		 LDA (0xa9) 		 A:ff P:a5
+ecb1		 STA (0x8d) 		 A:ff P:a5
+ecb4		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ecb7		 ISPu (0xf3) (45),Y = 548 @ 647 = ff		 A:ff P:a5
+ecb9		 NOP (0xea) 		 A:ff P:a5
+ecba		 NOP (0xea) 		 A:ff P:a5
+ecbb		 PHP (0x08) 		 A:ff P:a5
+ecbc		 PHA (0x48) 		 A:ff P:a5
+ecbd		 LDY (0xa0) 		 A:ff P:a5
+ecbf		 PLA (0x68) 		 A:ff P:a5
+ecc0		 PLP (0x28) 		 A:ff P:a5
+ecc1		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ecc4		 LDA (0xad) Absolute(1607)=0		 A:0 P:27
+ecc7		 CMP (0xc9) 		 A:0 P:27
+ecc9		 BEQ (0xf0) 		 A:0 P:27
+eccd		 LDY (0xa0) 		 A:0 P:a5
+eccf		 LDA (0xa9) 		 A:37 P:25
+ecd1		 STA (0x8d) 		 A:37 P:25
+ecd4		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ecd7		 ISPu (0xf3) (45),Y = 548 @ 647 = 37		 A:b8 P:a5
+ecd9		 NOP (0xea) 		 A:b8 P:a5
+ecda		 NOP (0xea) 		 A:b8 P:a5
+ecdb		 PHP (0x08) 		 A:b8 P:a5
+ecdc		 PHA (0x48) 		 A:b8 P:a5
+ecdd		 LDY (0xa0) 		 A:b8 P:a5
+ecdf		 PLA (0x68) 		 A:b8 P:a5
+ece0		 PLP (0x28) 		 A:b8 P:a5
+ece1		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ece4		 LDA (0xad) Absolute(1607)=56		 A:38 P:25
+ece7		 CMP (0xc9) 		 A:38 P:27
+ece9		 BEQ (0xf0) 		 A:38 P:27
+eced		 LDY (0xa0) 		 A:38 P:a5
+ecef		 LDX (0xa2) 		 A:38 P:a5
+ecf1		 LDA (0xa9) 		 A:eb P:a5
+ecf3		 STA (0x85) 		 A:eb P:a5
+ecf5		 JSR (0x20) 		 A:eb P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
+fab3		 CLC (0x18) 		 A:eb P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+ecf8		 ISPu (0xf7) ZeroPageX(72, 255)=6		 A:53 P:24
+ecfa		 NOP (0xea) 		 A:53 P:24
+ecfb		 NOP (0xea) 		 A:53 P:24
+ecfc		 NOP (0xea) 		 A:53 P:24
+ecfd		 NOP (0xea) 		 A:53 P:24
+ecfe		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+ed01		 LDA (0xa5) ZeroPage(71)=236		 A:ec P:a5
+ed03		 CMP (0xc9) 		 A:ec P:27
+ed05		 BEQ (0xf0) 		 A:ec P:27
+ed09		 INY (0xc8) 		 A:ec P:a5
+ed0a		 LDA (0xa9) 		 A:ff P:a5
+ed0c		 STA (0x85) 		 A:ff P:a5
+ed0e		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ed11		 ISPu (0xf7) ZeroPageX(72, 255)=6		 A:ff P:a5
+ed13		 NOP (0xea) 		 A:ff P:a5
+ed14		 NOP (0xea) 		 A:ff P:a5
+ed15		 NOP (0xea) 		 A:ff P:a5
+ed16		 NOP (0xea) 		 A:ff P:a5
+ed17		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ed1a		 LDA (0xa5) ZeroPage(71)=0		 A:0 P:27
+ed1c		 CMP (0xc9) 		 A:0 P:27
+ed1e		 BEQ (0xf0) 		 A:0 P:27
+ed22		 INY (0xc8) 		 A:0 P:a5
+ed23		 LDA (0xa9) 		 A:37 P:25
+ed25		 STA (0x85) 		 A:37 P:25
+ed27		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ed2a		 ISPu (0xf7) ZeroPageX(72, 255)=6		 A:b8 P:a5
+ed2c		 NOP (0xea) 		 A:b8 P:a5
+ed2d		 NOP (0xea) 		 A:b8 P:a5
+ed2e		 NOP (0xea) 		 A:b8 P:a5
+ed2f		 NOP (0xea) 		 A:b8 P:a5
+ed30		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ed33		 LDA (0xa5) ZeroPage(71)=56		 A:38 P:25
+ed35		 CMP (0xc9) 		 A:38 P:27
+ed37		 BEQ (0xf0) 		 A:38 P:27
+ed3b		 LDA (0xa9) 		 A:eb P:a5
+ed3d		 STA (0x8d) 		 A:eb P:a5
+ed40		 LDY (0xa0) 		 A:eb P:a5
+ed42		 JSR (0x20) 		 A:eb P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
+fab3		 CLC (0x18) 		 A:eb P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+ed45		 ISPu (0xfb) AbsoluteY(548,ff)=0		 A:53 P:24
+ed48		 NOP (0xea) 		 A:53 P:24
+ed49		 NOP (0xea) 		 A:53 P:24
+ed4a		 PHP (0x08) 		 A:53 P:24
+ed4b		 PHA (0x48) 		 A:53 P:24
+ed4c		 LDY (0xa0) 		 A:53 P:a4
+ed4e		 PLA (0x68) 		 A:53 P:24
+ed4f		 PLP (0x28) 		 A:53 P:24
+ed50		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+ed53		 LDA (0xad) Absolute(1607)=236		 A:ec P:a5
+ed56		 CMP (0xc9) 		 A:ec P:27
+ed58		 BEQ (0xf0) 		 A:ec P:27
+ed5c		 LDY (0xa0) 		 A:ec P:a5
+ed5e		 LDA (0xa9) 		 A:ff P:a5
+ed60		 STA (0x8d) 		 A:ff P:a5
+ed63		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+ed66		 ISPu (0xfb) AbsoluteY(548,ff)=0		 A:ff P:a5
+ed69		 NOP (0xea) 		 A:ff P:a5
+ed6a		 NOP (0xea) 		 A:ff P:a5
+ed6b		 PHP (0x08) 		 A:ff P:a5
+ed6c		 PHA (0x48) 		 A:ff P:a5
+ed6d		 LDY (0xa0) 		 A:ff P:a5
+ed6f		 PLA (0x68) 		 A:ff P:a5
+ed70		 PLP (0x28) 		 A:ff P:a5
+ed71		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+ed74		 LDA (0xad) Absolute(1607)=0		 A:0 P:27
+ed77		 CMP (0xc9) 		 A:0 P:27
+ed79		 BEQ (0xf0) 		 A:0 P:27
+ed7d		 LDY (0xa0) 		 A:0 P:a5
+ed7f		 LDA (0xa9) 		 A:37 P:25
+ed81		 STA (0x8d) 		 A:37 P:25
+ed84		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ed87		 ISPu (0xfb) AbsoluteY(548,ff)=0		 A:b8 P:a5
+ed8a		 NOP (0xea) 		 A:b8 P:a5
+ed8b		 NOP (0xea) 		 A:b8 P:a5
+ed8c		 PHP (0x08) 		 A:b8 P:a5
+ed8d		 PHA (0x48) 		 A:b8 P:a5
+ed8e		 LDY (0xa0) 		 A:b8 P:a5
+ed90		 PLA (0x68) 		 A:b8 P:a5
+ed91		 PLP (0x28) 		 A:b8 P:a5
+ed92		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+ed95		 LDA (0xad) Absolute(1607)=56		 A:38 P:25
+ed98		 CMP (0xc9) 		 A:38 P:27
+ed9a		 BEQ (0xf0) 		 A:38 P:27
+ed9e		 LDY (0xa0) 		 A:38 P:a5
+eda0		 LDX (0xa2) 		 A:38 P:a5
+eda2		 LDA (0xa9) 		 A:eb P:a5
+eda4		 STA (0x8d) 		 A:eb P:a5
+eda7		 JSR (0x20) 		 A:eb P:a5
+fab1		 BIT (0x24) ZeroPage(1)=255		 A:eb P:e5
+fab3		 CLC (0x18) 		 A:eb P:e4
+fab4		 LDA (0xa9) 		 A:40 P:64
+fab6		 RTS (0x60) 		 A:40 P:64
+edaa		 ISPu (0xff) AbsoluteX(548,ff)=0		 A:53 P:24
+edad		 NOP (0xea) 		 A:53 P:24
+edae		 NOP (0xea) 		 A:53 P:24
+edaf		 NOP (0xea) 		 A:53 P:24
+edb0		 NOP (0xea) 		 A:53 P:24
+edb1		 JSR (0x20) 		 A:53 P:24
+fab7		 BVS (0x70) 		 A:53 P:24
+fab9		 BCS (0xb0) 		 A:53 P:24
+fabb		 BMI (0x30) 		 A:53 P:24
+fabd		 CMP (0xc9) 		 A:53 P:27
+fabf		 BNE (0xd0) 		 A:53 P:27
+fac1		 RTS (0x60) 		 A:53 P:27
+edb4		 LDA (0xad) Absolute(1607)=236		 A:ec P:a5
+edb7		 CMP (0xc9) 		 A:ec P:27
+edb9		 BEQ (0xf0) 		 A:ec P:27
+edbd		 INY (0xc8) 		 A:ec P:a5
+edbe		 LDA (0xa9) 		 A:ff P:a5
+edc0		 STA (0x8d) 		 A:ff P:a5
+edc3		 JSR (0x20) 		 A:ff P:a5
+fac2		 CLV (0xB8) 		 A:ff P:a5
+fac3		 SEC (0x38) 		 A:ff P:a5
+fac4		 LDA (0xa9) 		 A:ff P:a5
+fac6		 RTS (0x60) 		 A:ff P:a5
+edc6		 ISPu (0xff) AbsoluteX(548,ff)=0		 A:ff P:a5
+edc9		 NOP (0xea) 		 A:ff P:a5
+edca		 NOP (0xea) 		 A:ff P:a5
+edcb		 NOP (0xea) 		 A:ff P:a5
+edcc		 NOP (0xea) 		 A:ff P:a5
+edcd		 JSR (0x20) 		 A:ff P:a5
+fac7		 BVS (0x70) 		 A:ff P:a5
+fac9		 BEQ (0xf0) 		 A:ff P:a5
+facb		 BPL (0x10) 		 A:ff P:a5
+facd		 BCC (0x90) 		 A:ff P:a5
+facf		 CMP (0xc9) 		 A:ff P:27
+fad1		 BNE (0xd0) 		 A:ff P:27
+fad3		 RTS (0x60) 		 A:ff P:27
+edd0		 LDA (0xad) Absolute(1607)=0		 A:0 P:27
+edd3		 CMP (0xc9) 		 A:0 P:27
+edd5		 BEQ (0xf0) 		 A:0 P:27
+edd9		 INY (0xc8) 		 A:0 P:a5
+edda		 LDA (0xa9) 		 A:37 P:25
+eddc		 STA (0x8d) 		 A:37 P:25
+eddf		 JSR (0x20) 		 A:37 P:25
+fad4		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fad6		 SEC (0x38) 		 A:37 P:e5
+fad7		 LDA (0xa9) 		 A:f0 P:e5
+fad9		 RTS (0x60) 		 A:f0 P:e5
+ede2		 ISPu (0xff) AbsoluteX(548,ff)=0		 A:b8 P:a5
+ede5		 NOP (0xea) 		 A:b8 P:a5
+ede6		 NOP (0xea) 		 A:b8 P:a5
+ede7		 NOP (0xea) 		 A:b8 P:a5
+ede8		 NOP (0xea) 		 A:b8 P:a5
+ede9		 JSR (0x20) 		 A:b8 P:a5
+fada		 BVS (0x70) 		 A:b8 P:a5
+fadc		 BEQ (0xf0) 		 A:b8 P:a5
+fade		 BPL (0x10) 		 A:b8 P:a5
+fae0		 BCC (0x90) 		 A:b8 P:a5
+fae2		 CMP (0xc9) 		 A:b8 P:27
+fae4		 BEQ (0xf0) 		 A:b8 P:27
+fae8		 RTS (0x60) 		 A:b8 P:27
+edec		 LDA (0xad) Absolute(1607)=56		 A:38 P:25
+edef		 CMP (0xc9) 		 A:38 P:27
+edf1		 BEQ (0xf0) 		 A:38 P:27
+edf5		 RTS (0x60) 		 A:38 P:27
+c641		 JSR (0x20) 		 A:38 P:27
+edf6		 LDA (0xa9) 		 A:ff P:a5
+edf8		 STA (0x85) 		 A:ff P:a5
+edfa		 LDY (0xa0) 		 A:ff P:a5
+edfc		 LDX (0xa2) 		 A:ff P:25
+edfe		 LDA (0xa9) 		 A:47 P:25
+ee00		 STA (0x85) 		 A:47 P:25
+ee02		 LDA (0xa9) 		 A:6 P:25
+ee04		 STA (0x85) 		 A:6 P:25
+ee06		 LDA (0xa9) 		 A:a5 P:a5
+ee08		 STA (0x8d) 		 A:a5 P:a5
+ee0b		 JSR (0x20) 		 A:a5 P:a5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+ee0e		 SLOu (0x03) (45,X) = 47 = 647 = a5		 A:fb P:e5
+ee10		 NOP (0xea) 		 A:fb P:e5
+ee11		 NOP (0xea) 		 A:fb P:e5
+ee12		 NOP (0xea) 		 A:fb P:e5
+ee13		 NOP (0xea) 		 A:fb P:e5
+ee14		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+ee17		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+ee1a		 CMP (0xc9) 		 A:4a P:67
+ee1c		 BEQ (0xf0) 		 A:4a P:67
+ee20		 INY (0xc8) 		 A:4a P:e5
+ee21		 LDA (0xa9) 		 A:29 P:65
+ee23		 STA (0x8d) 		 A:29 P:65
+ee26		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+ee29		 SLOu (0x03) (45,X) = 47 = 647 = 29		 A:d3 P:a4
+ee2b		 NOP (0xea) 		 A:d3 P:a4
+ee2c		 NOP (0xea) 		 A:d3 P:a4
+ee2d		 NOP (0xea) 		 A:d3 P:a4
+ee2e		 NOP (0xea) 		 A:d3 P:a4
+ee2f		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+ee32		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+ee35		 CMP (0xc9) 		 A:52 P:27
+ee37		 BEQ (0xf0) 		 A:52 P:27
+ee3b		 INY (0xc8) 		 A:52 P:a5
+ee3c		 LDA (0xa9) 		 A:37 P:25
+ee3e		 STA (0x8d) 		 A:37 P:25
+ee41		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+ee44		 SLOu (0x03) (45,X) = 47 = 647 = 37		 A:7e P:64
+ee46		 NOP (0xea) 		 A:7e P:64
+ee47		 NOP (0xea) 		 A:7e P:64
+ee48		 NOP (0xea) 		 A:7e P:64
+ee49		 NOP (0xea) 		 A:7e P:64
+ee4a		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+ee4d		 LDA (0xad) Absolute(1607)=110		 A:6e P:65
+ee50		 CMP (0xc9) 		 A:6e P:67
+ee52		 BEQ (0xf0) 		 A:6e P:67
+ee56		 INY (0xc8) 		 A:6e P:e5
+ee57		 LDA (0xa9) 		 A:a5 P:e5
+ee59		 STA (0x85) 		 A:a5 P:e5
+ee5b		 JSR (0x20) 		 A:a5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+ee5e		 SLOu (0x07) ZeroPage(71)=165		 A:fb P:e5
+ee60		 NOP (0xea) 		 A:fb P:e5
+ee61		 NOP (0xea) 		 A:fb P:e5
+ee62		 NOP (0xea) 		 A:fb P:e5
+ee63		 NOP (0xea) 		 A:fb P:e5
+ee64		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+ee67		 LDA (0xa5) ZeroPage(71)=74		 A:4a P:65
+ee69		 CMP (0xc9) 		 A:4a P:67
+ee6b		 BEQ (0xf0) 		 A:4a P:67
+ee6f		 INY (0xc8) 		 A:4a P:e5
+ee70		 LDA (0xa9) 		 A:29 P:65
+ee72		 STA (0x85) 		 A:29 P:65
+ee74		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+ee77		 SLOu (0x07) ZeroPage(71)=41		 A:d3 P:a4
+ee79		 NOP (0xea) 		 A:d3 P:a4
+ee7a		 NOP (0xea) 		 A:d3 P:a4
+ee7b		 NOP (0xea) 		 A:d3 P:a4
+ee7c		 NOP (0xea) 		 A:d3 P:a4
+ee7d		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+ee80		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+ee82		 CMP (0xc9) 		 A:52 P:27
+ee84		 BEQ (0xf0) 		 A:52 P:27
+ee88		 INY (0xc8) 		 A:52 P:a5
+ee89		 LDA (0xa9) 		 A:37 P:25
+ee8b		 STA (0x85) 		 A:37 P:25
+ee8d		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+ee90		 SLOu (0x07) ZeroPage(71)=55		 A:7e P:64
+ee92		 NOP (0xea) 		 A:7e P:64
+ee93		 NOP (0xea) 		 A:7e P:64
+ee94		 NOP (0xea) 		 A:7e P:64
+ee95		 NOP (0xea) 		 A:7e P:64
+ee96		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+ee99		 LDA (0xa5) ZeroPage(71)=110		 A:6e P:65
+ee9b		 CMP (0xc9) 		 A:6e P:67
+ee9d		 BEQ (0xf0) 		 A:6e P:67
+eea1		 INY (0xc8) 		 A:6e P:e5
+eea2		 LDA (0xa9) 		 A:a5 P:e5
+eea4		 STA (0x8d) 		 A:a5 P:e5
+eea7		 JSR (0x20) 		 A:a5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+eeaa		 SLOu (0x0f) Absolute(1607)=165		 A:fb P:e5
+eead		 NOP (0xea) 		 A:fb P:e5
+eeae		 NOP (0xea) 		 A:fb P:e5
+eeaf		 NOP (0xea) 		 A:fb P:e5
+eeb0		 NOP (0xea) 		 A:fb P:e5
+eeb1		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+eeb4		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+eeb7		 CMP (0xc9) 		 A:4a P:67
+eeb9		 BEQ (0xf0) 		 A:4a P:67
+eebd		 INY (0xc8) 		 A:4a P:e5
+eebe		 LDA (0xa9) 		 A:29 P:65
+eec0		 STA (0x8d) 		 A:29 P:65
+eec3		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+eec6		 SLOu (0x0f) Absolute(1607)=41		 A:d3 P:a4
+eec9		 NOP (0xea) 		 A:d3 P:a4
+eeca		 NOP (0xea) 		 A:d3 P:a4
+eecb		 NOP (0xea) 		 A:d3 P:a4
+eecc		 NOP (0xea) 		 A:d3 P:a4
+eecd		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+eed0		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+eed3		 CMP (0xc9) 		 A:52 P:27
+eed5		 BEQ (0xf0) 		 A:52 P:27
+eed9		 INY (0xc8) 		 A:52 P:a5
+eeda		 LDA (0xa9) 		 A:37 P:25
+eedc		 STA (0x8d) 		 A:37 P:25
+eedf		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+eee2		 SLOu (0x0f) Absolute(1607)=55		 A:7e P:64
+eee5		 NOP (0xea) 		 A:7e P:64
+eee6		 NOP (0xea) 		 A:7e P:64
+eee7		 NOP (0xea) 		 A:7e P:64
+eee8		 NOP (0xea) 		 A:7e P:64
+eee9		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+eeec		 LDA (0xad) Absolute(1607)=110		 A:6e P:65
+eeef		 CMP (0xc9) 		 A:6e P:67
+eef1		 BEQ (0xf0) 		 A:6e P:67
+eef5		 LDA (0xa9) 		 A:a5 P:e5
+eef7		 STA (0x8d) 		 A:a5 P:e5
+eefa		 LDA (0xa9) 		 A:48 P:65
+eefc		 STA (0x85) 		 A:48 P:65
+eefe		 LDA (0xa9) 		 A:5 P:65
+ef00		 STA (0x85) 		 A:5 P:65
+ef02		 LDY (0xa0) 		 A:5 P:e5
+ef04		 JSR (0x20) 		 A:5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:5 P:e5
+fa7d		 CLC (0x18) 		 A:5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+ef07		 SLOu (0x13) (45),Y = 548 @ 647 = a5		 A:fb P:e5
+ef09		 NOP (0xea) 		 A:fb P:e5
+ef0a		 NOP (0xea) 		 A:fb P:e5
+ef0b		 PHP (0x08) 		 A:fb P:e5
+ef0c		 PHA (0x48) 		 A:fb P:e5
+ef0d		 LDY (0xa0) 		 A:fb P:e5
+ef0f		 PLA (0x68) 		 A:fb P:e5
+ef10		 PLP (0x28) 		 A:fb P:e5
+ef11		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+ef14		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+ef17		 CMP (0xc9) 		 A:4a P:67
+ef19		 BEQ (0xf0) 		 A:4a P:67
+ef1d		 LDY (0xa0) 		 A:4a P:e5
+ef1f		 LDA (0xa9) 		 A:29 P:65
+ef21		 STA (0x8d) 		 A:29 P:65
+ef24		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+ef27		 SLOu (0x13) (45),Y = 548 @ 647 = 29		 A:d3 P:a4
+ef29		 NOP (0xea) 		 A:d3 P:a4
+ef2a		 NOP (0xea) 		 A:d3 P:a4
+ef2b		 PHP (0x08) 		 A:d3 P:a4
+ef2c		 PHA (0x48) 		 A:d3 P:a4
+ef2d		 LDY (0xa0) 		 A:d3 P:a4
+ef2f		 PLA (0x68) 		 A:d3 P:a4
+ef30		 PLP (0x28) 		 A:d3 P:a4
+ef31		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+ef34		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+ef37		 CMP (0xc9) 		 A:52 P:27
+ef39		 BEQ (0xf0) 		 A:52 P:27
+ef3d		 LDY (0xa0) 		 A:52 P:a5
+ef3f		 LDA (0xa9) 		 A:37 P:25
+ef41		 STA (0x8d) 		 A:37 P:25
+ef44		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+ef47		 SLOu (0x13) (45),Y = 548 @ 647 = 37		 A:7e P:64
+ef49		 NOP (0xea) 		 A:7e P:64
+ef4a		 NOP (0xea) 		 A:7e P:64
+ef4b		 PHP (0x08) 		 A:7e P:64
+ef4c		 PHA (0x48) 		 A:7e P:64
+ef4d		 LDY (0xa0) 		 A:7e P:e4
+ef4f		 PLA (0x68) 		 A:7e P:64
+ef50		 PLP (0x28) 		 A:7e P:64
+ef51		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+ef54		 LDA (0xad) Absolute(1607)=110		 A:6e P:65
+ef57		 CMP (0xc9) 		 A:6e P:67
+ef59		 BEQ (0xf0) 		 A:6e P:67
+ef5d		 LDY (0xa0) 		 A:6e P:e5
+ef5f		 LDX (0xa2) 		 A:6e P:e5
+ef61		 LDA (0xa9) 		 A:a5 P:e5
+ef63		 STA (0x85) 		 A:a5 P:e5
+ef65		 JSR (0x20) 		 A:a5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+ef68		 SLOu (0x17) ZeroPageX(72, 255)=6		 A:fb P:e5
+ef6a		 NOP (0xea) 		 A:fb P:e5
+ef6b		 NOP (0xea) 		 A:fb P:e5
+ef6c		 NOP (0xea) 		 A:fb P:e5
+ef6d		 NOP (0xea) 		 A:fb P:e5
+ef6e		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+ef71		 LDA (0xa5) ZeroPage(71)=74		 A:4a P:65
+ef73		 CMP (0xc9) 		 A:4a P:67
+ef75		 BEQ (0xf0) 		 A:4a P:67
+ef79		 INY (0xc8) 		 A:4a P:e5
+ef7a		 LDA (0xa9) 		 A:29 P:65
+ef7c		 STA (0x85) 		 A:29 P:65
+ef7e		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+ef81		 SLOu (0x17) ZeroPageX(72, 255)=6		 A:d3 P:a4
+ef83		 NOP (0xea) 		 A:d3 P:a4
+ef84		 NOP (0xea) 		 A:d3 P:a4
+ef85		 NOP (0xea) 		 A:d3 P:a4
+ef86		 NOP (0xea) 		 A:d3 P:a4
+ef87		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+ef8a		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+ef8c		 CMP (0xc9) 		 A:52 P:27
+ef8e		 BEQ (0xf0) 		 A:52 P:27
+ef92		 INY (0xc8) 		 A:52 P:a5
+ef93		 LDA (0xa9) 		 A:37 P:25
+ef95		 STA (0x85) 		 A:37 P:25
+ef97		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+ef9a		 SLOu (0x17) ZeroPageX(72, 255)=6		 A:7e P:64
+ef9c		 NOP (0xea) 		 A:7e P:64
+ef9d		 NOP (0xea) 		 A:7e P:64
+ef9e		 NOP (0xea) 		 A:7e P:64
+ef9f		 NOP (0xea) 		 A:7e P:64
+efa0		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+efa3		 LDA (0xa5) ZeroPage(71)=110		 A:6e P:65
+efa5		 CMP (0xc9) 		 A:6e P:67
+efa7		 BEQ (0xf0) 		 A:6e P:67
+efab		 LDA (0xa9) 		 A:a5 P:e5
+efad		 STA (0x8d) 		 A:a5 P:e5
+efb0		 LDY (0xa0) 		 A:a5 P:e5
+efb2		 JSR (0x20) 		 A:a5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+efb5		 SLOu (0x1b) AbsoluteY(548,ff)=0		 A:fb P:e5
+efb8		 NOP (0xea) 		 A:fb P:e5
+efb9		 NOP (0xea) 		 A:fb P:e5
+efba		 PHP (0x08) 		 A:fb P:e5
+efbb		 PHA (0x48) 		 A:fb P:e5
+efbc		 LDY (0xa0) 		 A:fb P:e5
+efbe		 PLA (0x68) 		 A:fb P:e5
+efbf		 PLP (0x28) 		 A:fb P:e5
+efc0		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+efc3		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+efc6		 CMP (0xc9) 		 A:4a P:67
+efc8		 BEQ (0xf0) 		 A:4a P:67
+efcc		 LDY (0xa0) 		 A:4a P:e5
+efce		 LDA (0xa9) 		 A:29 P:65
+efd0		 STA (0x8d) 		 A:29 P:65
+efd3		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+efd6		 SLOu (0x1b) AbsoluteY(548,ff)=0		 A:d3 P:a4
+efd9		 NOP (0xea) 		 A:d3 P:a4
+efda		 NOP (0xea) 		 A:d3 P:a4
+efdb		 PHP (0x08) 		 A:d3 P:a4
+efdc		 PHA (0x48) 		 A:d3 P:a4
+efdd		 LDY (0xa0) 		 A:d3 P:a4
+efdf		 PLA (0x68) 		 A:d3 P:a4
+efe0		 PLP (0x28) 		 A:d3 P:a4
+efe1		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+efe4		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+efe7		 CMP (0xc9) 		 A:52 P:27
+efe9		 BEQ (0xf0) 		 A:52 P:27
+efed		 LDY (0xa0) 		 A:52 P:a5
+efef		 LDA (0xa9) 		 A:37 P:25
+eff1		 STA (0x8d) 		 A:37 P:25
+eff4		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+eff7		 SLOu (0x1b) AbsoluteY(548,ff)=0		 A:7e P:64
+effa		 NOP (0xea) 		 A:7e P:64
+effb		 NOP (0xea) 		 A:7e P:64
+effc		 PHP (0x08) 		 A:7e P:64
+effd		 PHA (0x48) 		 A:7e P:64
+effe		 LDY (0xa0) 		 A:7e P:e4
+f000		 PLA (0x68) 		 A:7e P:64
+f001		 PLP (0x28) 		 A:7e P:64
+f002		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+f005		 LDA (0xad) Absolute(1607)=110		 A:6e P:65
+f008		 CMP (0xc9) 		 A:6e P:67
+f00a		 BEQ (0xf0) 		 A:6e P:67
+f00e		 LDY (0xa0) 		 A:6e P:e5
+f010		 LDX (0xa2) 		 A:6e P:e5
+f012		 LDA (0xa9) 		 A:a5 P:e5
+f014		 STA (0x8d) 		 A:a5 P:e5
+f017		 JSR (0x20) 		 A:a5 P:e5
+fa7b		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fa7d		 CLC (0x18) 		 A:a5 P:e4
+fa7e		 LDA (0xa9) 		 A:b3 P:e4
+fa80		 RTS (0x60) 		 A:b3 P:e4
+f01a		 SLOu (0x1f) AbsoluteX(548,ff)=0		 A:fb P:e5
+f01d		 NOP (0xea) 		 A:fb P:e5
+f01e		 NOP (0xea) 		 A:fb P:e5
+f01f		 NOP (0xea) 		 A:fb P:e5
+f020		 NOP (0xea) 		 A:fb P:e5
+f021		 JSR (0x20) 		 A:fb P:e5
+fa81		 BVC (0x50) 		 A:fb P:e5
+fa83		 BCC (0x90) 		 A:fb P:e5
+fa85		 BPL (0x10) 		 A:fb P:e5
+fa87		 CMP (0xc9) 		 A:fb P:67
+fa89		 BNE (0xd0) 		 A:fb P:67
+fa8b		 RTS (0x60) 		 A:fb P:67
+f024		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f027		 CMP (0xc9) 		 A:4a P:67
+f029		 BEQ (0xf0) 		 A:4a P:67
+f02d		 INY (0xc8) 		 A:4a P:e5
+f02e		 LDA (0xa9) 		 A:29 P:65
+f030		 STA (0x8d) 		 A:29 P:65
+f033		 JSR (0x20) 		 A:29 P:65
+fa8c		 CLV (0xB8) 		 A:29 P:25
+fa8d		 CLC (0x18) 		 A:29 P:24
+fa8e		 LDA (0xa9) 		 A:c3 P:a4
+fa90		 RTS (0x60) 		 A:c3 P:a4
+f036		 SLOu (0x1f) AbsoluteX(548,ff)=0		 A:d3 P:a4
+f039		 NOP (0xea) 		 A:d3 P:a4
+f03a		 NOP (0xea) 		 A:d3 P:a4
+f03b		 NOP (0xea) 		 A:d3 P:a4
+f03c		 NOP (0xea) 		 A:d3 P:a4
+f03d		 JSR (0x20) 		 A:d3 P:a4
+fa91		 BVS (0x70) 		 A:d3 P:a4
+fa93		 BEQ (0xf0) 		 A:d3 P:a4
+fa95		 BPL (0x10) 		 A:d3 P:a4
+fa97		 BCS (0xb0) 		 A:d3 P:a4
+fa99		 CMP (0xc9) 		 A:d3 P:27
+fa9b		 BNE (0xd0) 		 A:d3 P:27
+fa9d		 RTS (0x60) 		 A:d3 P:27
+f040		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f043		 CMP (0xc9) 		 A:52 P:27
+f045		 BEQ (0xf0) 		 A:52 P:27
+f049		 INY (0xc8) 		 A:52 P:a5
+f04a		 LDA (0xa9) 		 A:37 P:25
+f04c		 STA (0x8d) 		 A:37 P:25
+f04f		 JSR (0x20) 		 A:37 P:25
+fa9e		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+faa0		 SEC (0x38) 		 A:37 P:e5
+faa1		 LDA (0xa9) 		 A:10 P:65
+faa3		 RTS (0x60) 		 A:10 P:65
+f052		 SLOu (0x1f) AbsoluteX(548,ff)=0		 A:7e P:64
+f055		 NOP (0xea) 		 A:7e P:64
+f056		 NOP (0xea) 		 A:7e P:64
+f057		 NOP (0xea) 		 A:7e P:64
+f058		 NOP (0xea) 		 A:7e P:64
+f059		 JSR (0x20) 		 A:7e P:64
+faa4		 BVC (0x50) 		 A:7e P:64
+faa6		 BEQ (0xf0) 		 A:7e P:64
+faa8		 BMI (0x30) 		 A:7e P:64
+faaa		 BCS (0xb0) 		 A:7e P:64
+faac		 CMP (0xc9) 		 A:7e P:67
+faae		 BNE (0xd0) 		 A:7e P:67
+fab0		 RTS (0x60) 		 A:7e P:67
+f05c		 LDA (0xad) Absolute(1607)=110		 A:6e P:65
+f05f		 CMP (0xc9) 		 A:6e P:67
+f061		 BEQ (0xf0) 		 A:6e P:67
+f065		 RTS (0x60) 		 A:6e P:67
+c644		 JSR (0x20) 		 A:6e P:67
+f066		 LDA (0xa9) 		 A:ff P:e5
+f068		 STA (0x85) 		 A:ff P:e5
+f06a		 LDY (0xa0) 		 A:ff P:e5
+f06c		 LDX (0xa2) 		 A:ff P:65
+f06e		 LDA (0xa9) 		 A:47 P:65
+f070		 STA (0x85) 		 A:47 P:65
+f072		 LDA (0xa9) 		 A:6 P:65
+f074		 STA (0x85) 		 A:6 P:65
+f076		 LDA (0xa9) 		 A:a5 P:e5
+f078		 STA (0x8d) 		 A:a5 P:e5
+f07b		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f07e		 RLAu (0x23) (45,X) = 47 = 647 = a5		 A:2 P:65
+f080		 NOP (0xea) 		 A:2 P:65
+f081		 NOP (0xea) 		 A:2 P:65
+f082		 NOP (0xea) 		 A:2 P:65
+f083		 NOP (0xea) 		 A:2 P:65
+f084		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f087		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f08a		 CMP (0xc9) 		 A:4a P:67
+f08c		 BEQ (0xf0) 		 A:4a P:67
+f090		 INY (0xc8) 		 A:4a P:e5
+f091		 LDA (0xa9) 		 A:29 P:65
+f093		 STA (0x8d) 		 A:29 P:65
+f096		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f099		 RLAu (0x23) (45,X) = 47 = 647 = 29		 A:42 P:24
+f09b		 NOP (0xea) 		 A:42 P:24
+f09c		 NOP (0xea) 		 A:42 P:24
+f09d		 NOP (0xea) 		 A:42 P:24
+f09e		 NOP (0xea) 		 A:42 P:24
+f09f		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f0a2		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f0a5		 CMP (0xc9) 		 A:52 P:27
+f0a7		 BEQ (0xf0) 		 A:52 P:27
+f0ab		 INY (0xc8) 		 A:52 P:a5
+f0ac		 LDA (0xa9) 		 A:37 P:25
+f0ae		 STA (0x8d) 		 A:37 P:25
+f0b1		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f0b4		 RLAu (0x23) (45,X) = 47 = 647 = 37		 A:65 P:64
+f0b6		 NOP (0xea) 		 A:65 P:64
+f0b7		 NOP (0xea) 		 A:65 P:64
+f0b8		 NOP (0xea) 		 A:65 P:64
+f0b9		 NOP (0xea) 		 A:65 P:64
+f0ba		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f0bd		 LDA (0xad) Absolute(1607)=111		 A:6f P:65
+f0c0		 CMP (0xc9) 		 A:6f P:67
+f0c2		 BEQ (0xf0) 		 A:6f P:67
+f0c6		 INY (0xc8) 		 A:6f P:e5
+f0c7		 LDA (0xa9) 		 A:a5 P:e5
+f0c9		 STA (0x85) 		 A:a5 P:e5
+f0cb		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f0ce		 RLAu (0x27) ZeroPage(71)=165		 A:2 P:65
+f0d0		 NOP (0xea) 		 A:2 P:65
+f0d1		 NOP (0xea) 		 A:2 P:65
+f0d2		 NOP (0xea) 		 A:2 P:65
+f0d3		 NOP (0xea) 		 A:2 P:65
+f0d4		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f0d7		 LDA (0xa5) ZeroPage(71)=74		 A:4a P:65
+f0d9		 CMP (0xc9) 		 A:4a P:67
+f0db		 BEQ (0xf0) 		 A:4a P:67
+f0df		 INY (0xc8) 		 A:4a P:e5
+f0e0		 LDA (0xa9) 		 A:29 P:65
+f0e2		 STA (0x85) 		 A:29 P:65
+f0e4		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f0e7		 RLAu (0x27) ZeroPage(71)=41		 A:42 P:24
+f0e9		 NOP (0xea) 		 A:42 P:24
+f0ea		 NOP (0xea) 		 A:42 P:24
+f0eb		 NOP (0xea) 		 A:42 P:24
+f0ec		 NOP (0xea) 		 A:42 P:24
+f0ed		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f0f0		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+f0f2		 CMP (0xc9) 		 A:52 P:27
+f0f4		 BEQ (0xf0) 		 A:52 P:27
+f0f8		 INY (0xc8) 		 A:52 P:a5
+f0f9		 LDA (0xa9) 		 A:37 P:25
+f0fb		 STA (0x85) 		 A:37 P:25
+f0fd		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f100		 RLAu (0x27) ZeroPage(71)=55		 A:65 P:64
+f102		 NOP (0xea) 		 A:65 P:64
+f103		 NOP (0xea) 		 A:65 P:64
+f104		 NOP (0xea) 		 A:65 P:64
+f105		 NOP (0xea) 		 A:65 P:64
+f106		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f109		 LDA (0xa5) ZeroPage(71)=111		 A:6f P:65
+f10b		 CMP (0xc9) 		 A:6f P:67
+f10d		 BEQ (0xf0) 		 A:6f P:67
+f111		 INY (0xc8) 		 A:6f P:e5
+f112		 LDA (0xa9) 		 A:a5 P:e5
+f114		 STA (0x8d) 		 A:a5 P:e5
+f117		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f11a		 RLAu (0x2F) Absolute(1607)=165		 A:2 P:65
+f11d		 NOP (0xea) 		 A:2 P:65
+f11e		 NOP (0xea) 		 A:2 P:65
+f11f		 NOP (0xea) 		 A:2 P:65
+f120		 NOP (0xea) 		 A:2 P:65
+f121		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f124		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f127		 CMP (0xc9) 		 A:4a P:67
+f129		 BEQ (0xf0) 		 A:4a P:67
+f12d		 INY (0xc8) 		 A:4a P:e5
+f12e		 LDA (0xa9) 		 A:29 P:65
+f130		 STA (0x8d) 		 A:29 P:65
+f133		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f136		 RLAu (0x2F) Absolute(1607)=41		 A:42 P:24
+f139		 NOP (0xea) 		 A:42 P:24
+f13a		 NOP (0xea) 		 A:42 P:24
+f13b		 NOP (0xea) 		 A:42 P:24
+f13c		 NOP (0xea) 		 A:42 P:24
+f13d		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f140		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f143		 CMP (0xc9) 		 A:52 P:27
+f145		 BEQ (0xf0) 		 A:52 P:27
+f149		 INY (0xc8) 		 A:52 P:a5
+f14a		 LDA (0xa9) 		 A:37 P:25
+f14c		 STA (0x8d) 		 A:37 P:25
+f14f		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f152		 RLAu (0x2F) Absolute(1607)=55		 A:65 P:64
+f155		 NOP (0xea) 		 A:65 P:64
+f156		 NOP (0xea) 		 A:65 P:64
+f157		 NOP (0xea) 		 A:65 P:64
+f158		 NOP (0xea) 		 A:65 P:64
+f159		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f15c		 LDA (0xad) Absolute(1607)=111		 A:6f P:65
+f15f		 CMP (0xc9) 		 A:6f P:67
+f161		 BEQ (0xf0) 		 A:6f P:67
+f165		 LDA (0xa9) 		 A:a5 P:e5
+f167		 STA (0x8d) 		 A:a5 P:e5
+f16a		 LDA (0xa9) 		 A:48 P:65
+f16c		 STA (0x85) 		 A:48 P:65
+f16e		 LDA (0xa9) 		 A:5 P:65
+f170		 STA (0x85) 		 A:5 P:65
+f172		 LDY (0xa0) 		 A:5 P:e5
+f174		 JSR (0x20) 		 A:5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:5 P:e5
+fb55		 CLC (0x18) 		 A:5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f177		 RLAu (0x33) (45),Y = 548 @ 647 = a5		 A:2 P:65
+f179		 NOP (0xea) 		 A:2 P:65
+f17a		 NOP (0xea) 		 A:2 P:65
+f17b		 PHP (0x08) 		 A:2 P:65
+f17c		 PHA (0x48) 		 A:2 P:65
+f17d		 LDY (0xa0) 		 A:2 P:e5
+f17f		 PLA (0x68) 		 A:2 P:65
+f180		 PLP (0x28) 		 A:2 P:65
+f181		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f184		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f187		 CMP (0xc9) 		 A:4a P:67
+f189		 BEQ (0xf0) 		 A:4a P:67
+f18d		 LDY (0xa0) 		 A:4a P:e5
+f18f		 LDA (0xa9) 		 A:29 P:65
+f191		 STA (0x8d) 		 A:29 P:65
+f194		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f197		 RLAu (0x33) (45),Y = 548 @ 647 = 29		 A:42 P:24
+f199		 NOP (0xea) 		 A:42 P:24
+f19a		 NOP (0xea) 		 A:42 P:24
+f19b		 PHP (0x08) 		 A:42 P:24
+f19c		 PHA (0x48) 		 A:42 P:24
+f19d		 LDY (0xa0) 		 A:42 P:a4
+f19f		 PLA (0x68) 		 A:42 P:24
+f1a0		 PLP (0x28) 		 A:42 P:24
+f1a1		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f1a4		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f1a7		 CMP (0xc9) 		 A:52 P:27
+f1a9		 BEQ (0xf0) 		 A:52 P:27
+f1ad		 LDY (0xa0) 		 A:52 P:a5
+f1af		 LDA (0xa9) 		 A:37 P:25
+f1b1		 STA (0x8d) 		 A:37 P:25
+f1b4		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f1b7		 RLAu (0x33) (45),Y = 548 @ 647 = 37		 A:65 P:64
+f1b9		 NOP (0xea) 		 A:65 P:64
+f1ba		 NOP (0xea) 		 A:65 P:64
+f1bb		 PHP (0x08) 		 A:65 P:64
+f1bc		 PHA (0x48) 		 A:65 P:64
+f1bd		 LDY (0xa0) 		 A:65 P:e4
+f1bf		 PLA (0x68) 		 A:65 P:64
+f1c0		 PLP (0x28) 		 A:65 P:64
+f1c1		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f1c4		 LDA (0xad) Absolute(1607)=111		 A:6f P:65
+f1c7		 CMP (0xc9) 		 A:6f P:67
+f1c9		 BEQ (0xf0) 		 A:6f P:67
+f1cd		 LDY (0xa0) 		 A:6f P:e5
+f1cf		 LDX (0xa2) 		 A:6f P:e5
+f1d1		 LDA (0xa9) 		 A:a5 P:e5
+f1d3		 STA (0x85) 		 A:a5 P:e5
+f1d5		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f1d8		 RLAu (0x37) ZeroPageX(72, 255)=6		 A:2 P:65
+f1da		 NOP (0xea) 		 A:2 P:65
+f1db		 NOP (0xea) 		 A:2 P:65
+f1dc		 NOP (0xea) 		 A:2 P:65
+f1dd		 NOP (0xea) 		 A:2 P:65
+f1de		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f1e1		 LDA (0xa5) ZeroPage(71)=74		 A:4a P:65
+f1e3		 CMP (0xc9) 		 A:4a P:67
+f1e5		 BEQ (0xf0) 		 A:4a P:67
+f1e9		 INY (0xc8) 		 A:4a P:e5
+f1ea		 LDA (0xa9) 		 A:29 P:65
+f1ec		 STA (0x85) 		 A:29 P:65
+f1ee		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f1f1		 RLAu (0x37) ZeroPageX(72, 255)=6		 A:42 P:24
+f1f3		 NOP (0xea) 		 A:42 P:24
+f1f4		 NOP (0xea) 		 A:42 P:24
+f1f5		 NOP (0xea) 		 A:42 P:24
+f1f6		 NOP (0xea) 		 A:42 P:24
+f1f7		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f1fa		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+f1fc		 CMP (0xc9) 		 A:52 P:27
+f1fe		 BEQ (0xf0) 		 A:52 P:27
+f202		 INY (0xc8) 		 A:52 P:a5
+f203		 LDA (0xa9) 		 A:37 P:25
+f205		 STA (0x85) 		 A:37 P:25
+f207		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f20a		 RLAu (0x37) ZeroPageX(72, 255)=6		 A:65 P:64
+f20c		 NOP (0xea) 		 A:65 P:64
+f20d		 NOP (0xea) 		 A:65 P:64
+f20e		 NOP (0xea) 		 A:65 P:64
+f20f		 NOP (0xea) 		 A:65 P:64
+f210		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f213		 LDA (0xa5) ZeroPage(71)=111		 A:6f P:65
+f215		 CMP (0xc9) 		 A:6f P:67
+f217		 BEQ (0xf0) 		 A:6f P:67
+f21b		 LDA (0xa9) 		 A:a5 P:e5
+f21d		 STA (0x8d) 		 A:a5 P:e5
+f220		 LDY (0xa0) 		 A:a5 P:e5
+f222		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f225		 RLAu (0x3b) AbsoluteY(548,ff)=0		 A:2 P:65
+f228		 NOP (0xea) 		 A:2 P:65
+f229		 NOP (0xea) 		 A:2 P:65
+f22a		 PHP (0x08) 		 A:2 P:65
+f22b		 PHA (0x48) 		 A:2 P:65
+f22c		 LDY (0xa0) 		 A:2 P:e5
+f22e		 PLA (0x68) 		 A:2 P:65
+f22f		 PLP (0x28) 		 A:2 P:65
+f230		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f233		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f236		 CMP (0xc9) 		 A:4a P:67
+f238		 BEQ (0xf0) 		 A:4a P:67
+f23c		 LDY (0xa0) 		 A:4a P:e5
+f23e		 LDA (0xa9) 		 A:29 P:65
+f240		 STA (0x8d) 		 A:29 P:65
+f243		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f246		 RLAu (0x3b) AbsoluteY(548,ff)=0		 A:42 P:24
+f249		 NOP (0xea) 		 A:42 P:24
+f24a		 NOP (0xea) 		 A:42 P:24
+f24b		 PHP (0x08) 		 A:42 P:24
+f24c		 PHA (0x48) 		 A:42 P:24
+f24d		 LDY (0xa0) 		 A:42 P:a4
+f24f		 PLA (0x68) 		 A:42 P:24
+f250		 PLP (0x28) 		 A:42 P:24
+f251		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f254		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f257		 CMP (0xc9) 		 A:52 P:27
+f259		 BEQ (0xf0) 		 A:52 P:27
+f25d		 LDY (0xa0) 		 A:52 P:a5
+f25f		 LDA (0xa9) 		 A:37 P:25
+f261		 STA (0x8d) 		 A:37 P:25
+f264		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f267		 RLAu (0x3b) AbsoluteY(548,ff)=0		 A:65 P:64
+f26a		 NOP (0xea) 		 A:65 P:64
+f26b		 NOP (0xea) 		 A:65 P:64
+f26c		 PHP (0x08) 		 A:65 P:64
+f26d		 PHA (0x48) 		 A:65 P:64
+f26e		 LDY (0xa0) 		 A:65 P:e4
+f270		 PLA (0x68) 		 A:65 P:64
+f271		 PLP (0x28) 		 A:65 P:64
+f272		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f275		 LDA (0xad) Absolute(1607)=111		 A:6f P:65
+f278		 CMP (0xc9) 		 A:6f P:67
+f27a		 BEQ (0xf0) 		 A:6f P:67
+f27e		 LDY (0xa0) 		 A:6f P:e5
+f280		 LDX (0xa2) 		 A:6f P:e5
+f282		 LDA (0xa9) 		 A:a5 P:e5
+f284		 STA (0x8d) 		 A:a5 P:e5
+f287		 JSR (0x20) 		 A:a5 P:e5
+fb53		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb55		 CLC (0x18) 		 A:a5 P:e4
+fb56		 LDA (0xa9) 		 A:b3 P:e4
+fb58		 RTS (0x60) 		 A:b3 P:e4
+f28a		 RLAu (0x3F) AbsoluteX(548,ff)=0		 A:2 P:65
+f28d		 NOP (0xea) 		 A:2 P:65
+f28e		 NOP (0xea) 		 A:2 P:65
+f28f		 NOP (0xea) 		 A:2 P:65
+f290		 NOP (0xea) 		 A:2 P:65
+f291		 JSR (0x20) 		 A:2 P:65
+fb59		 BVC (0x50) 		 A:2 P:65
+fb5b		 BCC (0x90) 		 A:2 P:65
+fb5d		 BMI (0x30) 		 A:2 P:65
+fb5f		 CMP (0xc9) 		 A:2 P:67
+fb61		 BNE (0xd0) 		 A:2 P:67
+fb63		 RTS (0x60) 		 A:2 P:67
+f294		 LDA (0xad) Absolute(1607)=74		 A:4a P:65
+f297		 CMP (0xc9) 		 A:4a P:67
+f299		 BEQ (0xf0) 		 A:4a P:67
+f29d		 INY (0xc8) 		 A:4a P:e5
+f29e		 LDA (0xa9) 		 A:29 P:65
+f2a0		 STA (0x8d) 		 A:29 P:65
+f2a3		 JSR (0x20) 		 A:29 P:65
+fb64		 CLV (0xB8) 		 A:29 P:25
+fb65		 CLC (0x18) 		 A:29 P:24
+fb66		 LDA (0xa9) 		 A:42 P:24
+fb68		 RTS (0x60) 		 A:42 P:24
+f2a6		 RLAu (0x3F) AbsoluteX(548,ff)=0		 A:42 P:24
+f2a9		 NOP (0xea) 		 A:42 P:24
+f2aa		 NOP (0xea) 		 A:42 P:24
+f2ab		 NOP (0xea) 		 A:42 P:24
+f2ac		 NOP (0xea) 		 A:42 P:24
+f2ad		 JSR (0x20) 		 A:42 P:24
+fb69		 BVS (0x70) 		 A:42 P:24
+fb6b		 BEQ (0xf0) 		 A:42 P:24
+fb6d		 BMI (0x30) 		 A:42 P:24
+fb6f		 BCS (0xb0) 		 A:42 P:24
+fb71		 CMP (0xc9) 		 A:42 P:27
+fb73		 BEQ (0xf0) 		 A:42 P:27
+fb77		 RTS (0x60) 		 A:42 P:27
+f2b0		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f2b3		 CMP (0xc9) 		 A:52 P:27
+f2b5		 BEQ (0xf0) 		 A:52 P:27
+f2b9		 INY (0xc8) 		 A:52 P:a5
+f2ba		 LDA (0xa9) 		 A:37 P:25
+f2bc		 STA (0x8d) 		 A:37 P:25
+f2bf		 JSR (0x20) 		 A:37 P:25
+fa68		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fa6a		 SEC (0x38) 		 A:37 P:e5
+fa6b		 LDA (0xa9) 		 A:75 P:65
+fa6d		 RTS (0x60) 		 A:75 P:65
+f2c2		 RLAu (0x3F) AbsoluteX(548,ff)=0		 A:65 P:64
+f2c5		 NOP (0xea) 		 A:65 P:64
+f2c6		 NOP (0xea) 		 A:65 P:64
+f2c7		 NOP (0xea) 		 A:65 P:64
+f2c8		 NOP (0xea) 		 A:65 P:64
+f2c9		 JSR (0x20) 		 A:65 P:64
+fa6e		 BVC (0x50) 		 A:65 P:64
+fa70		 BEQ (0xf0) 		 A:65 P:64
+fa72		 BMI (0x30) 		 A:65 P:64
+fa74		 BCS (0xb0) 		 A:65 P:64
+fa76		 CMP (0xc9) 		 A:65 P:67
+fa78		 BNE (0xd0) 		 A:65 P:67
+fa7a		 RTS (0x60) 		 A:65 P:67
+f2cc		 LDA (0xad) Absolute(1607)=111		 A:6f P:65
+f2cf		 CMP (0xc9) 		 A:6f P:67
+f2d1		 BEQ (0xf0) 		 A:6f P:67
+f2d5		 RTS (0x60) 		 A:6f P:67
+c647		 JSR (0x20) 		 A:6f P:67
+f2d6		 LDA (0xa9) 		 A:ff P:e5
+f2d8		 STA (0x85) 		 A:ff P:e5
+f2da		 LDY (0xa0) 		 A:ff P:e5
+f2dc		 LDX (0xa2) 		 A:ff P:65
+f2de		 LDA (0xa9) 		 A:47 P:65
+f2e0		 STA (0x85) 		 A:47 P:65
+f2e2		 LDA (0xa9) 		 A:6 P:65
+f2e4		 STA (0x85) 		 A:6 P:65
+f2e6		 LDA (0xa9) 		 A:a5 P:e5
+f2e8		 STA (0x8d) 		 A:a5 P:e5
+f2eb		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f2ee		 SREu (0x43) (45,X) = 47 = 647 = a5		 A:e1 P:e5
+f2f0		 NOP (0xea) 		 A:e1 P:e5
+f2f1		 NOP (0xea) 		 A:e1 P:e5
+f2f2		 NOP (0xea) 		 A:e1 P:e5
+f2f3		 NOP (0xea) 		 A:e1 P:e5
+f2f4		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f2f7		 LDA (0xad) Absolute(1607)=82		 A:52 P:65
+f2fa		 CMP (0xc9) 		 A:52 P:67
+f2fc		 BEQ (0xf0) 		 A:52 P:67
+f300		 INY (0xc8) 		 A:52 P:e5
+f301		 LDA (0xa9) 		 A:29 P:65
+f303		 STA (0x8d) 		 A:29 P:65
+f306		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f309		 SREu (0x43) (45,X) = 47 = 647 = 29		 A:56 P:25
+f30b		 NOP (0xea) 		 A:56 P:25
+f30c		 NOP (0xea) 		 A:56 P:25
+f30d		 NOP (0xea) 		 A:56 P:25
+f30e		 NOP (0xea) 		 A:56 P:25
+f30f		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f312		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f315		 CMP (0xc9) 		 A:14 P:27
+f317		 BEQ (0xf0) 		 A:14 P:27
+f31b		 INY (0xc8) 		 A:14 P:a5
+f31c		 LDA (0xa9) 		 A:37 P:25
+f31e		 STA (0x8d) 		 A:37 P:25
+f321		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f324		 SREu (0x43) (45,X) = 47 = 647 = 37		 A:6e P:65
+f326		 NOP (0xea) 		 A:6e P:65
+f327		 NOP (0xea) 		 A:6e P:65
+f328		 NOP (0xea) 		 A:6e P:65
+f329		 NOP (0xea) 		 A:6e P:65
+f32a		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f32d		 LDA (0xad) Absolute(1607)=27		 A:1b P:65
+f330		 CMP (0xc9) 		 A:1b P:67
+f332		 BEQ (0xf0) 		 A:1b P:67
+f336		 INY (0xc8) 		 A:1b P:e5
+f337		 LDA (0xa9) 		 A:a5 P:e5
+f339		 STA (0x85) 		 A:a5 P:e5
+f33b		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f33e		 SREu (0x47) ZeroPage(71)=165		 A:e1 P:e5
+f340		 NOP (0xea) 		 A:e1 P:e5
+f341		 NOP (0xea) 		 A:e1 P:e5
+f342		 NOP (0xea) 		 A:e1 P:e5
+f343		 NOP (0xea) 		 A:e1 P:e5
+f344		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f347		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:65
+f349		 CMP (0xc9) 		 A:52 P:67
+f34b		 BEQ (0xf0) 		 A:52 P:67
+f34f		 INY (0xc8) 		 A:52 P:e5
+f350		 LDA (0xa9) 		 A:29 P:65
+f352		 STA (0x85) 		 A:29 P:65
+f354		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f357		 SREu (0x47) ZeroPage(71)=41		 A:56 P:25
+f359		 NOP (0xea) 		 A:56 P:25
+f35a		 NOP (0xea) 		 A:56 P:25
+f35b		 NOP (0xea) 		 A:56 P:25
+f35c		 NOP (0xea) 		 A:56 P:25
+f35d		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f360		 LDA (0xa5) ZeroPage(71)=20		 A:14 P:25
+f362		 CMP (0xc9) 		 A:14 P:27
+f364		 BEQ (0xf0) 		 A:14 P:27
+f368		 INY (0xc8) 		 A:14 P:a5
+f369		 LDA (0xa9) 		 A:37 P:25
+f36b		 STA (0x85) 		 A:37 P:25
+f36d		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f370		 SREu (0x47) ZeroPage(71)=55		 A:6e P:65
+f372		 NOP (0xea) 		 A:6e P:65
+f373		 NOP (0xea) 		 A:6e P:65
+f374		 NOP (0xea) 		 A:6e P:65
+f375		 NOP (0xea) 		 A:6e P:65
+f376		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f379		 LDA (0xa5) ZeroPage(71)=27		 A:1b P:65
+f37b		 CMP (0xc9) 		 A:1b P:67
+f37d		 BEQ (0xf0) 		 A:1b P:67
+f381		 INY (0xc8) 		 A:1b P:e5
+f382		 LDA (0xa9) 		 A:a5 P:e5
+f384		 STA (0x8d) 		 A:a5 P:e5
+f387		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f38a		 SREu (0x4F) Absolute(1607)=165		 A:e1 P:e5
+f38d		 NOP (0xea) 		 A:e1 P:e5
+f38e		 NOP (0xea) 		 A:e1 P:e5
+f38f		 NOP (0xea) 		 A:e1 P:e5
+f390		 NOP (0xea) 		 A:e1 P:e5
+f391		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f394		 LDA (0xad) Absolute(1607)=82		 A:52 P:65
+f397		 CMP (0xc9) 		 A:52 P:67
+f399		 BEQ (0xf0) 		 A:52 P:67
+f39d		 INY (0xc8) 		 A:52 P:e5
+f39e		 LDA (0xa9) 		 A:29 P:65
+f3a0		 STA (0x8d) 		 A:29 P:65
+f3a3		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f3a6		 SREu (0x4F) Absolute(1607)=41		 A:56 P:25
+f3a9		 NOP (0xea) 		 A:56 P:25
+f3aa		 NOP (0xea) 		 A:56 P:25
+f3ab		 NOP (0xea) 		 A:56 P:25
+f3ac		 NOP (0xea) 		 A:56 P:25
+f3ad		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f3b0		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f3b3		 CMP (0xc9) 		 A:14 P:27
+f3b5		 BEQ (0xf0) 		 A:14 P:27
+f3b9		 INY (0xc8) 		 A:14 P:a5
+f3ba		 LDA (0xa9) 		 A:37 P:25
+f3bc		 STA (0x8d) 		 A:37 P:25
+f3bf		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f3c2		 SREu (0x4F) Absolute(1607)=55		 A:6e P:65
+f3c5		 NOP (0xea) 		 A:6e P:65
+f3c6		 NOP (0xea) 		 A:6e P:65
+f3c7		 NOP (0xea) 		 A:6e P:65
+f3c8		 NOP (0xea) 		 A:6e P:65
+f3c9		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f3cc		 LDA (0xad) Absolute(1607)=27		 A:1b P:65
+f3cf		 CMP (0xc9) 		 A:1b P:67
+f3d1		 BEQ (0xf0) 		 A:1b P:67
+f3d5		 LDA (0xa9) 		 A:a5 P:e5
+f3d7		 STA (0x8d) 		 A:a5 P:e5
+f3da		 LDA (0xa9) 		 A:48 P:65
+f3dc		 STA (0x85) 		 A:48 P:65
+f3de		 LDA (0xa9) 		 A:5 P:65
+f3e0		 STA (0x85) 		 A:5 P:65
+f3e2		 LDY (0xa0) 		 A:5 P:e5
+f3e4		 JSR (0x20) 		 A:5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:5 P:e5
+fb1f		 CLC (0x18) 		 A:5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f3e7		 SREu (0x53) (45),Y = 548 @ 647 = a5		 A:e1 P:e5
+f3e9		 NOP (0xea) 		 A:e1 P:e5
+f3ea		 NOP (0xea) 		 A:e1 P:e5
+f3eb		 PHP (0x08) 		 A:e1 P:e5
+f3ec		 PHA (0x48) 		 A:e1 P:e5
+f3ed		 LDY (0xa0) 		 A:e1 P:e5
+f3ef		 PLA (0x68) 		 A:e1 P:e5
+f3f0		 PLP (0x28) 		 A:e1 P:e5
+f3f1		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f3f4		 LDA (0xad) Absolute(1607)=82		 A:52 P:65
+f3f7		 CMP (0xc9) 		 A:52 P:67
+f3f9		 BEQ (0xf0) 		 A:52 P:67
+f3fd		 LDY (0xa0) 		 A:52 P:e5
+f3ff		 LDA (0xa9) 		 A:29 P:65
+f401		 STA (0x8d) 		 A:29 P:65
+f404		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f407		 SREu (0x53) (45),Y = 548 @ 647 = 29		 A:56 P:25
+f409		 NOP (0xea) 		 A:56 P:25
+f40a		 NOP (0xea) 		 A:56 P:25
+f40b		 PHP (0x08) 		 A:56 P:25
+f40c		 PHA (0x48) 		 A:56 P:25
+f40d		 LDY (0xa0) 		 A:56 P:a5
+f40f		 PLA (0x68) 		 A:56 P:25
+f410		 PLP (0x28) 		 A:56 P:25
+f411		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f414		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f417		 CMP (0xc9) 		 A:14 P:27
+f419		 BEQ (0xf0) 		 A:14 P:27
+f41d		 LDY (0xa0) 		 A:14 P:a5
+f41f		 LDA (0xa9) 		 A:37 P:25
+f421		 STA (0x8d) 		 A:37 P:25
+f424		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f427		 SREu (0x53) (45),Y = 548 @ 647 = 37		 A:6e P:65
+f429		 NOP (0xea) 		 A:6e P:65
+f42a		 NOP (0xea) 		 A:6e P:65
+f42b		 PHP (0x08) 		 A:6e P:65
+f42c		 PHA (0x48) 		 A:6e P:65
+f42d		 LDY (0xa0) 		 A:6e P:e5
+f42f		 PLA (0x68) 		 A:6e P:65
+f430		 PLP (0x28) 		 A:6e P:65
+f431		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f434		 LDA (0xad) Absolute(1607)=27		 A:1b P:65
+f437		 CMP (0xc9) 		 A:1b P:67
+f439		 BEQ (0xf0) 		 A:1b P:67
+f43d		 LDY (0xa0) 		 A:1b P:e5
+f43f		 LDX (0xa2) 		 A:1b P:e5
+f441		 LDA (0xa9) 		 A:a5 P:e5
+f443		 STA (0x85) 		 A:a5 P:e5
+f445		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f448		 SREu (0x57) ZeroPageX(72, 255)=6		 A:e1 P:e5
+f44a		 NOP (0xea) 		 A:e1 P:e5
+f44b		 NOP (0xea) 		 A:e1 P:e5
+f44c		 NOP (0xea) 		 A:e1 P:e5
+f44d		 NOP (0xea) 		 A:e1 P:e5
+f44e		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f451		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:65
+f453		 CMP (0xc9) 		 A:52 P:67
+f455		 BEQ (0xf0) 		 A:52 P:67
+f459		 INY (0xc8) 		 A:52 P:e5
+f45a		 LDA (0xa9) 		 A:29 P:65
+f45c		 STA (0x85) 		 A:29 P:65
+f45e		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f461		 SREu (0x57) ZeroPageX(72, 255)=6		 A:56 P:25
+f463		 NOP (0xea) 		 A:56 P:25
+f464		 NOP (0xea) 		 A:56 P:25
+f465		 NOP (0xea) 		 A:56 P:25
+f466		 NOP (0xea) 		 A:56 P:25
+f467		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f46a		 LDA (0xa5) ZeroPage(71)=20		 A:14 P:25
+f46c		 CMP (0xc9) 		 A:14 P:27
+f46e		 BEQ (0xf0) 		 A:14 P:27
+f472		 INY (0xc8) 		 A:14 P:a5
+f473		 LDA (0xa9) 		 A:37 P:25
+f475		 STA (0x85) 		 A:37 P:25
+f477		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f47a		 SREu (0x57) ZeroPageX(72, 255)=6		 A:6e P:65
+f47c		 NOP (0xea) 		 A:6e P:65
+f47d		 NOP (0xea) 		 A:6e P:65
+f47e		 NOP (0xea) 		 A:6e P:65
+f47f		 NOP (0xea) 		 A:6e P:65
+f480		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f483		 LDA (0xa5) ZeroPage(71)=27		 A:1b P:65
+f485		 CMP (0xc9) 		 A:1b P:67
+f487		 BEQ (0xf0) 		 A:1b P:67
+f48b		 LDA (0xa9) 		 A:a5 P:e5
+f48d		 STA (0x8d) 		 A:a5 P:e5
+f490		 LDY (0xa0) 		 A:a5 P:e5
+f492		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f495		 SREu (0x5b) AbsoluteY(548,ff)=0		 A:e1 P:e5
+f498		 NOP (0xea) 		 A:e1 P:e5
+f499		 NOP (0xea) 		 A:e1 P:e5
+f49a		 PHP (0x08) 		 A:e1 P:e5
+f49b		 PHA (0x48) 		 A:e1 P:e5
+f49c		 LDY (0xa0) 		 A:e1 P:e5
+f49e		 PLA (0x68) 		 A:e1 P:e5
+f49f		 PLP (0x28) 		 A:e1 P:e5
+f4a0		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f4a3		 LDA (0xad) Absolute(1607)=82		 A:52 P:65
+f4a6		 CMP (0xc9) 		 A:52 P:67
+f4a8		 BEQ (0xf0) 		 A:52 P:67
+f4ac		 LDY (0xa0) 		 A:52 P:e5
+f4ae		 LDA (0xa9) 		 A:29 P:65
+f4b0		 STA (0x8d) 		 A:29 P:65
+f4b3		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f4b6		 SREu (0x5b) AbsoluteY(548,ff)=0		 A:56 P:25
+f4b9		 NOP (0xea) 		 A:56 P:25
+f4ba		 NOP (0xea) 		 A:56 P:25
+f4bb		 PHP (0x08) 		 A:56 P:25
+f4bc		 PHA (0x48) 		 A:56 P:25
+f4bd		 LDY (0xa0) 		 A:56 P:a5
+f4bf		 PLA (0x68) 		 A:56 P:25
+f4c0		 PLP (0x28) 		 A:56 P:25
+f4c1		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f4c4		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f4c7		 CMP (0xc9) 		 A:14 P:27
+f4c9		 BEQ (0xf0) 		 A:14 P:27
+f4cd		 LDY (0xa0) 		 A:14 P:a5
+f4cf		 LDA (0xa9) 		 A:37 P:25
+f4d1		 STA (0x8d) 		 A:37 P:25
+f4d4		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f4d7		 SREu (0x5b) AbsoluteY(548,ff)=0		 A:6e P:65
+f4da		 NOP (0xea) 		 A:6e P:65
+f4db		 NOP (0xea) 		 A:6e P:65
+f4dc		 PHP (0x08) 		 A:6e P:65
+f4dd		 PHA (0x48) 		 A:6e P:65
+f4de		 LDY (0xa0) 		 A:6e P:e5
+f4e0		 PLA (0x68) 		 A:6e P:65
+f4e1		 PLP (0x28) 		 A:6e P:65
+f4e2		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f4e5		 LDA (0xad) Absolute(1607)=27		 A:1b P:65
+f4e8		 CMP (0xc9) 		 A:1b P:67
+f4ea		 BEQ (0xf0) 		 A:1b P:67
+f4ee		 LDY (0xa0) 		 A:1b P:e5
+f4f0		 LDX (0xa2) 		 A:1b P:e5
+f4f2		 LDA (0xa9) 		 A:a5 P:e5
+f4f4		 STA (0x8d) 		 A:a5 P:e5
+f4f7		 JSR (0x20) 		 A:a5 P:e5
+fb1d		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+fb1f		 CLC (0x18) 		 A:a5 P:e4
+fb20		 LDA (0xa9) 		 A:b3 P:e4
+fb22		 RTS (0x60) 		 A:b3 P:e4
+f4fa		 SREu (0x5f) AbsoluteX(548,ff)=0		 A:e1 P:e5
+f4fd		 NOP (0xea) 		 A:e1 P:e5
+f4fe		 NOP (0xea) 		 A:e1 P:e5
+f4ff		 NOP (0xea) 		 A:e1 P:e5
+f500		 NOP (0xea) 		 A:e1 P:e5
+f501		 JSR (0x20) 		 A:e1 P:e5
+fb23		 BVC (0x50) 		 A:e1 P:e5
+fb25		 BCC (0x90) 		 A:e1 P:e5
+fb27		 BPL (0x10) 		 A:e1 P:e5
+fb29		 CMP (0xc9) 		 A:e1 P:67
+fb2b		 BNE (0xd0) 		 A:e1 P:67
+fb2d		 RTS (0x60) 		 A:e1 P:67
+f504		 LDA (0xad) Absolute(1607)=82		 A:52 P:65
+f507		 CMP (0xc9) 		 A:52 P:67
+f509		 BEQ (0xf0) 		 A:52 P:67
+f50d		 INY (0xc8) 		 A:52 P:e5
+f50e		 LDA (0xa9) 		 A:29 P:65
+f510		 STA (0x8d) 		 A:29 P:65
+f513		 JSR (0x20) 		 A:29 P:65
+fb2e		 CLV (0xB8) 		 A:29 P:25
+fb2f		 CLC (0x18) 		 A:29 P:24
+fb30		 LDA (0xa9) 		 A:42 P:24
+fb32		 RTS (0x60) 		 A:42 P:24
+f516		 SREu (0x5f) AbsoluteX(548,ff)=0		 A:56 P:25
+f519		 NOP (0xea) 		 A:56 P:25
+f51a		 NOP (0xea) 		 A:56 P:25
+f51b		 NOP (0xea) 		 A:56 P:25
+f51c		 NOP (0xea) 		 A:56 P:25
+f51d		 JSR (0x20) 		 A:56 P:25
+fb33		 BVS (0x70) 		 A:56 P:25
+fb35		 BEQ (0xf0) 		 A:56 P:25
+fb37		 BMI (0x30) 		 A:56 P:25
+fb39		 BCC (0x90) 		 A:56 P:25
+fb3b		 CMP (0xc9) 		 A:56 P:27
+fb3d		 BNE (0xd0) 		 A:56 P:27
+fb3f		 RTS (0x60) 		 A:56 P:27
+f520		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f523		 CMP (0xc9) 		 A:14 P:27
+f525		 BEQ (0xf0) 		 A:14 P:27
+f529		 INY (0xc8) 		 A:14 P:a5
+f52a		 LDA (0xa9) 		 A:37 P:25
+f52c		 STA (0x8d) 		 A:37 P:25
+f52f		 JSR (0x20) 		 A:37 P:25
+fb40		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb42		 SEC (0x38) 		 A:37 P:e5
+fb43		 LDA (0xa9) 		 A:75 P:65
+fb45		 RTS (0x60) 		 A:75 P:65
+f532		 SREu (0x5f) AbsoluteX(548,ff)=0		 A:6e P:65
+f535		 NOP (0xea) 		 A:6e P:65
+f536		 NOP (0xea) 		 A:6e P:65
+f537		 NOP (0xea) 		 A:6e P:65
+f538		 NOP (0xea) 		 A:6e P:65
+f539		 JSR (0x20) 		 A:6e P:65
+fb46		 BVC (0x50) 		 A:6e P:65
+fb48		 BEQ (0xf0) 		 A:6e P:65
+fb4a		 BMI (0x30) 		 A:6e P:65
+fb4c		 BCC (0x90) 		 A:6e P:65
+fb4e		 CMP (0xc9) 		 A:6e P:67
+fb50		 BNE (0xd0) 		 A:6e P:67
+fb52		 RTS (0x60) 		 A:6e P:67
+f53c		 LDA (0xad) Absolute(1607)=27		 A:1b P:65
+f53f		 CMP (0xc9) 		 A:1b P:67
+f541		 BEQ (0xf0) 		 A:1b P:67
+f545		 RTS (0x60) 		 A:1b P:67
+c64a		 LDA (0xa5) ZeroPage(0)=0		 A:0 P:67
+c64c		 STA (0x85) 		 A:0 P:67
+c64e		 LDA (0xa9) 		 A:0 P:67
+c650		 STA (0x85) ??[0]		 A:0 P:67
+c652		 JSR (0x20) 		 A:0 P:67
+f546		 LDA (0xa9) 		 A:ff P:e5
+f548		 STA (0x85) 		 A:ff P:e5
+f54a		 LDY (0xa0) 		 A:ff P:65
+f54c		 LDX (0xa2) 		 A:ff P:65
+f54e		 LDA (0xa9) 		 A:47 P:65
+f550		 STA (0x85) 		 A:47 P:65
+f552		 LDA (0xa9) 		 A:6 P:65
+f554		 STA (0x85) 		 A:6 P:65
+f556		 LDA (0xa9) 		 A:a5 P:e5
+f558		 STA (0x8d) 		 A:a5 P:e5
+f55b		 JSR (0x20) 		 A:a5 P:e5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f55e		 RRAu (0x63) (45,X) = 47 = 647 = a5		 A:5 P:25
+f560		 NOP (0xea) 		 A:5 P:25
+f561		 NOP (0xea) 		 A:5 P:25
+f562		 NOP (0xea) 		 A:5 P:25
+f563		 NOP (0xea) 		 A:5 P:25
+f564		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f567		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f56a		 CMP (0xc9) 		 A:52 P:27
+f56c		 BEQ (0xf0) 		 A:52 P:27
+f570		 INY (0xc8) 		 A:52 P:25
+f571		 LDA (0xa9) 		 A:29 P:25
+f573		 STA (0x8d) 		 A:29 P:25
+f576		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f579		 RRAu (0x63) (45,X) = 47 = 647 = 29		 A:57 P:24
+f57b		 NOP (0xea) 		 A:57 P:24
+f57c		 NOP (0xea) 		 A:57 P:24
+f57d		 NOP (0xea) 		 A:57 P:24
+f57e		 NOP (0xea) 		 A:57 P:24
+f57f		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f582		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f585		 CMP (0xc9) 		 A:14 P:27
+f587		 BEQ (0xf0) 		 A:14 P:27
+f58b		 INY (0xc8) 		 A:14 P:25
+f58c		 LDA (0xa9) 		 A:37 P:25
+f58e		 STA (0x8d) 		 A:37 P:25
+f591		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f594		 RRAu (0x63) (45,X) = 47 = 647 = 37		 A:11 P:25
+f596		 NOP (0xea) 		 A:11 P:25
+f597		 NOP (0xea) 		 A:11 P:25
+f598		 NOP (0xea) 		 A:11 P:25
+f599		 NOP (0xea) 		 A:11 P:25
+f59a		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f59d		 LDA (0xad) Absolute(1607)=155		 A:9b P:a5
+f5a0		 CMP (0xc9) 		 A:9b P:27
+f5a2		 BEQ (0xf0) 		 A:9b P:27
+f5a6		 INY (0xc8) 		 A:9b P:25
+f5a7		 LDA (0xa9) 		 A:a5 P:a5
+f5a9		 STA (0x85) 		 A:a5 P:a5
+f5ab		 JSR (0x20) 		 A:a5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f5ae		 RRAu (0x67) ZeroPage(71)=165		 A:5 P:25
+f5b0		 NOP (0xea) 		 A:5 P:25
+f5b1		 NOP (0xea) 		 A:5 P:25
+f5b2		 NOP (0xea) 		 A:5 P:25
+f5b3		 NOP (0xea) 		 A:5 P:25
+f5b4		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f5b7		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+f5b9		 CMP (0xc9) 		 A:52 P:27
+f5bb		 BEQ (0xf0) 		 A:52 P:27
+f5bf		 INY (0xc8) 		 A:52 P:25
+f5c0		 LDA (0xa9) 		 A:29 P:25
+f5c2		 STA (0x85) 		 A:29 P:25
+f5c4		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f5c7		 RRAu (0x67) ZeroPage(71)=41		 A:57 P:24
+f5c9		 NOP (0xea) 		 A:57 P:24
+f5ca		 NOP (0xea) 		 A:57 P:24
+f5cb		 NOP (0xea) 		 A:57 P:24
+f5cc		 NOP (0xea) 		 A:57 P:24
+f5cd		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f5d0		 LDA (0xa5) ZeroPage(71)=20		 A:14 P:25
+f5d2		 CMP (0xc9) 		 A:14 P:27
+f5d4		 BEQ (0xf0) 		 A:14 P:27
+f5d8		 INY (0xc8) 		 A:14 P:25
+f5d9		 LDA (0xa9) 		 A:37 P:25
+f5db		 STA (0x85) 		 A:37 P:25
+f5dd		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f5e0		 RRAu (0x67) ZeroPage(71)=55		 A:11 P:25
+f5e2		 NOP (0xea) 		 A:11 P:25
+f5e3		 NOP (0xea) 		 A:11 P:25
+f5e4		 NOP (0xea) 		 A:11 P:25
+f5e5		 NOP (0xea) 		 A:11 P:25
+f5e6		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f5e9		 LDA (0xa5) ZeroPage(71)=155		 A:9b P:a5
+f5eb		 CMP (0xc9) 		 A:9b P:27
+f5ed		 BEQ (0xf0) 		 A:9b P:27
+f5f1		 INY (0xc8) 		 A:9b P:25
+f5f2		 LDA (0xa9) 		 A:a5 P:a5
+f5f4		 STA (0x8d) 		 A:a5 P:a5
+f5f7		 JSR (0x20) 		 A:a5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f5fa		 RRAu (0x6f) Absolute(1607)=165		 A:5 P:25
+f5fd		 NOP (0xea) 		 A:5 P:25
+f5fe		 NOP (0xea) 		 A:5 P:25
+f5ff		 NOP (0xea) 		 A:5 P:25
+f600		 NOP (0xea) 		 A:5 P:25
+f601		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f604		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f607		 CMP (0xc9) 		 A:52 P:27
+f609		 BEQ (0xf0) 		 A:52 P:27
+f60d		 INY (0xc8) 		 A:52 P:25
+f60e		 LDA (0xa9) 		 A:29 P:25
+f610		 STA (0x8d) 		 A:29 P:25
+f613		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f616		 RRAu (0x6f) Absolute(1607)=41		 A:57 P:24
+f619		 NOP (0xea) 		 A:57 P:24
+f61a		 NOP (0xea) 		 A:57 P:24
+f61b		 NOP (0xea) 		 A:57 P:24
+f61c		 NOP (0xea) 		 A:57 P:24
+f61d		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f620		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f623		 CMP (0xc9) 		 A:14 P:27
+f625		 BEQ (0xf0) 		 A:14 P:27
+f629		 INY (0xc8) 		 A:14 P:25
+f62a		 LDA (0xa9) 		 A:37 P:25
+f62c		 STA (0x8d) 		 A:37 P:25
+f62f		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f632		 RRAu (0x6f) Absolute(1607)=55		 A:11 P:25
+f635		 NOP (0xea) 		 A:11 P:25
+f636		 NOP (0xea) 		 A:11 P:25
+f637		 NOP (0xea) 		 A:11 P:25
+f638		 NOP (0xea) 		 A:11 P:25
+f639		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f63c		 LDA (0xad) Absolute(1607)=155		 A:9b P:a5
+f63f		 CMP (0xc9) 		 A:9b P:27
+f641		 BEQ (0xf0) 		 A:9b P:27
+f645		 LDA (0xa9) 		 A:a5 P:a5
+f647		 STA (0x8d) 		 A:a5 P:a5
+f64a		 LDA (0xa9) 		 A:48 P:25
+f64c		 STA (0x85) 		 A:48 P:25
+f64e		 LDA (0xa9) 		 A:5 P:25
+f650		 STA (0x85) 		 A:5 P:25
+f652		 LDY (0xa0) 		 A:5 P:a5
+f654		 JSR (0x20) 		 A:5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:5 P:e5
+faeb		 CLC (0x18) 		 A:5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f657		 RRAu (0x73) (45),Y = 548 @ 647 = a5		 A:5 P:25
+f659		 NOP (0xea) 		 A:5 P:25
+f65a		 NOP (0xea) 		 A:5 P:25
+f65b		 PHP (0x08) 		 A:5 P:25
+f65c		 PHA (0x48) 		 A:5 P:25
+f65d		 LDY (0xa0) 		 A:5 P:25
+f65f		 PLA (0x68) 		 A:5 P:25
+f660		 PLP (0x28) 		 A:5 P:25
+f661		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f664		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f667		 CMP (0xc9) 		 A:52 P:27
+f669		 BEQ (0xf0) 		 A:52 P:27
+f66d		 LDY (0xa0) 		 A:52 P:a5
+f66f		 LDA (0xa9) 		 A:29 P:25
+f671		 STA (0x8d) 		 A:29 P:25
+f674		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f677		 RRAu (0x73) (45),Y = 548 @ 647 = 29		 A:57 P:24
+f679		 NOP (0xea) 		 A:57 P:24
+f67a		 NOP (0xea) 		 A:57 P:24
+f67b		 PHP (0x08) 		 A:57 P:24
+f67c		 PHA (0x48) 		 A:57 P:24
+f67d		 LDY (0xa0) 		 A:57 P:24
+f67f		 PLA (0x68) 		 A:57 P:24
+f680		 PLP (0x28) 		 A:57 P:24
+f681		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f684		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f687		 CMP (0xc9) 		 A:14 P:27
+f689		 BEQ (0xf0) 		 A:14 P:27
+f68d		 LDY (0xa0) 		 A:14 P:a5
+f68f		 LDA (0xa9) 		 A:37 P:25
+f691		 STA (0x8d) 		 A:37 P:25
+f694		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f697		 RRAu (0x73) (45),Y = 548 @ 647 = 37		 A:11 P:25
+f699		 NOP (0xea) 		 A:11 P:25
+f69a		 NOP (0xea) 		 A:11 P:25
+f69b		 PHP (0x08) 		 A:11 P:25
+f69c		 PHA (0x48) 		 A:11 P:25
+f69d		 LDY (0xa0) 		 A:11 P:25
+f69f		 PLA (0x68) 		 A:11 P:25
+f6a0		 PLP (0x28) 		 A:11 P:25
+f6a1		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f6a4		 LDA (0xad) Absolute(1607)=155		 A:9b P:a5
+f6a7		 CMP (0xc9) 		 A:9b P:27
+f6a9		 BEQ (0xf0) 		 A:9b P:27
+f6ad		 LDY (0xa0) 		 A:9b P:25
+f6af		 LDX (0xa2) 		 A:9b P:a5
+f6b1		 LDA (0xa9) 		 A:a5 P:a5
+f6b3		 STA (0x85) 		 A:a5 P:a5
+f6b5		 JSR (0x20) 		 A:a5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f6b8		 RRAu (0x77) ZeroPageX(72, 255)=6		 A:5 P:25
+f6ba		 NOP (0xea) 		 A:5 P:25
+f6bb		 NOP (0xea) 		 A:5 P:25
+f6bc		 NOP (0xea) 		 A:5 P:25
+f6bd		 NOP (0xea) 		 A:5 P:25
+f6be		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f6c1		 LDA (0xa5) ZeroPage(71)=82		 A:52 P:25
+f6c3		 CMP (0xc9) 		 A:52 P:27
+f6c5		 BEQ (0xf0) 		 A:52 P:27
+f6c9		 INY (0xc8) 		 A:52 P:25
+f6ca		 LDA (0xa9) 		 A:29 P:25
+f6cc		 STA (0x85) 		 A:29 P:25
+f6ce		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f6d1		 RRAu (0x77) ZeroPageX(72, 255)=6		 A:57 P:24
+f6d3		 NOP (0xea) 		 A:57 P:24
+f6d4		 NOP (0xea) 		 A:57 P:24
+f6d5		 NOP (0xea) 		 A:57 P:24
+f6d6		 NOP (0xea) 		 A:57 P:24
+f6d7		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f6da		 LDA (0xa5) ZeroPage(71)=20		 A:14 P:25
+f6dc		 CMP (0xc9) 		 A:14 P:27
+f6de		 BEQ (0xf0) 		 A:14 P:27
+f6e2		 INY (0xc8) 		 A:14 P:25
+f6e3		 LDA (0xa9) 		 A:37 P:25
+f6e5		 STA (0x85) 		 A:37 P:25
+f6e7		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f6ea		 RRAu (0x77) ZeroPageX(72, 255)=6		 A:11 P:25
+f6ec		 NOP (0xea) 		 A:11 P:25
+f6ed		 NOP (0xea) 		 A:11 P:25
+f6ee		 NOP (0xea) 		 A:11 P:25
+f6ef		 NOP (0xea) 		 A:11 P:25
+f6f0		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f6f3		 LDA (0xa5) ZeroPage(71)=155		 A:9b P:a5
+f6f5		 CMP (0xc9) 		 A:9b P:27
+f6f7		 BEQ (0xf0) 		 A:9b P:27
+f6fb		 LDA (0xa9) 		 A:a5 P:a5
+f6fd		 STA (0x8d) 		 A:a5 P:a5
+f700		 LDY (0xa0) 		 A:a5 P:a5
+f702		 JSR (0x20) 		 A:a5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f705		 RRAu (0x7b) AbsoluteY(548,ff)=0		 A:5 P:25
+f708		 NOP (0xea) 		 A:5 P:25
+f709		 NOP (0xea) 		 A:5 P:25
+f70a		 PHP (0x08) 		 A:5 P:25
+f70b		 PHA (0x48) 		 A:5 P:25
+f70c		 LDY (0xa0) 		 A:5 P:25
+f70e		 PLA (0x68) 		 A:5 P:25
+f70f		 PLP (0x28) 		 A:5 P:25
+f710		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f713		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f716		 CMP (0xc9) 		 A:52 P:27
+f718		 BEQ (0xf0) 		 A:52 P:27
+f71c		 LDY (0xa0) 		 A:52 P:a5
+f71e		 LDA (0xa9) 		 A:29 P:25
+f720		 STA (0x8d) 		 A:29 P:25
+f723		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f726		 RRAu (0x7b) AbsoluteY(548,ff)=0		 A:57 P:24
+f729		 NOP (0xea) 		 A:57 P:24
+f72a		 NOP (0xea) 		 A:57 P:24
+f72b		 PHP (0x08) 		 A:57 P:24
+f72c		 PHA (0x48) 		 A:57 P:24
+f72d		 LDY (0xa0) 		 A:57 P:24
+f72f		 PLA (0x68) 		 A:57 P:24
+f730		 PLP (0x28) 		 A:57 P:24
+f731		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f734		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f737		 CMP (0xc9) 		 A:14 P:27
+f739		 BEQ (0xf0) 		 A:14 P:27
+f73d		 LDY (0xa0) 		 A:14 P:a5
+f73f		 LDA (0xa9) 		 A:37 P:25
+f741		 STA (0x8d) 		 A:37 P:25
+f744		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f747		 RRAu (0x7b) AbsoluteY(548,ff)=0		 A:11 P:25
+f74a		 NOP (0xea) 		 A:11 P:25
+f74b		 NOP (0xea) 		 A:11 P:25
+f74c		 PHP (0x08) 		 A:11 P:25
+f74d		 PHA (0x48) 		 A:11 P:25
+f74e		 LDY (0xa0) 		 A:11 P:25
+f750		 PLA (0x68) 		 A:11 P:25
+f751		 PLP (0x28) 		 A:11 P:25
+f752		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f755		 LDA (0xad) Absolute(1607)=155		 A:9b P:a5
+f758		 CMP (0xc9) 		 A:9b P:27
+f75a		 BEQ (0xf0) 		 A:9b P:27
+f75e		 LDY (0xa0) 		 A:9b P:25
+f760		 LDX (0xa2) 		 A:9b P:a5
+f762		 LDA (0xa9) 		 A:a5 P:a5
+f764		 STA (0x8d) 		 A:a5 P:a5
+f767		 JSR (0x20) 		 A:a5 P:a5
+fae9		 BIT (0x24) ZeroPage(1)=255		 A:a5 P:e5
+faeb		 CLC (0x18) 		 A:a5 P:e4
+faec		 LDA (0xa9) 		 A:b2 P:e4
+faee		 RTS (0x60) 		 A:b2 P:e4
+f76a		 RRAu (0x7f) AbsoluteX(548,ff)=0		 A:5 P:25
+f76d		 NOP (0xea) 		 A:5 P:25
+f76e		 NOP (0xea) 		 A:5 P:25
+f76f		 NOP (0xea) 		 A:5 P:25
+f770		 NOP (0xea) 		 A:5 P:25
+f771		 JSR (0x20) 		 A:5 P:25
+faef		 BVS (0x70) 		 A:5 P:25
+faf1		 BCC (0x90) 		 A:5 P:25
+faf3		 BMI (0x30) 		 A:5 P:25
+faf5		 CMP (0xc9) 		 A:5 P:27
+faf7		 BNE (0xd0) 		 A:5 P:27
+faf9		 RTS (0x60) 		 A:5 P:27
+f774		 LDA (0xad) Absolute(1607)=82		 A:52 P:25
+f777		 CMP (0xc9) 		 A:52 P:27
+f779		 BEQ (0xf0) 		 A:52 P:27
+f77d		 INY (0xc8) 		 A:52 P:25
+f77e		 LDA (0xa9) 		 A:29 P:25
+f780		 STA (0x8d) 		 A:29 P:25
+f783		 JSR (0x20) 		 A:29 P:25
+fafa		 CLV (0xB8) 		 A:29 P:25
+fafb		 CLC (0x18) 		 A:29 P:24
+fafc		 LDA (0xa9) 		 A:42 P:24
+fafe		 RTS (0x60) 		 A:42 P:24
+f786		 RRAu (0x7f) AbsoluteX(548,ff)=0		 A:57 P:24
+f789		 NOP (0xea) 		 A:57 P:24
+f78a		 NOP (0xea) 		 A:57 P:24
+f78b		 NOP (0xea) 		 A:57 P:24
+f78c		 NOP (0xea) 		 A:57 P:24
+f78d		 JSR (0x20) 		 A:57 P:24
+faff		 BVS (0x70) 		 A:57 P:24
+fb01		 BMI (0x30) 		 A:57 P:24
+fb03		 BCS (0xb0) 		 A:57 P:24
+fb05		 CMP (0xc9) 		 A:57 P:27
+fb07		 BNE (0xd0) 		 A:57 P:27
+fb09		 RTS (0x60) 		 A:57 P:27
+f790		 LDA (0xad) Absolute(1607)=20		 A:14 P:25
+f793		 CMP (0xc9) 		 A:14 P:27
+f795		 BEQ (0xf0) 		 A:14 P:27
+f799		 INY (0xc8) 		 A:14 P:25
+f79a		 LDA (0xa9) 		 A:37 P:25
+f79c		 STA (0x8d) 		 A:37 P:25
+f79f		 JSR (0x20) 		 A:37 P:25
+fb0a		 BIT (0x24) ZeroPage(1)=255		 A:37 P:e5
+fb0c		 SEC (0x38) 		 A:37 P:e5
+fb0d		 LDA (0xa9) 		 A:75 P:65
+fb0f		 RTS (0x60) 		 A:75 P:65
+f7a2		 RRAu (0x7f) AbsoluteX(548,ff)=0		 A:11 P:25
+f7a5		 NOP (0xea) 		 A:11 P:25
+f7a6		 NOP (0xea) 		 A:11 P:25
+f7a7		 NOP (0xea) 		 A:11 P:25
+f7a8		 NOP (0xea) 		 A:11 P:25
+f7a9		 JSR (0x20) 		 A:11 P:25
+fb10		 BVS (0x70) 		 A:11 P:25
+fb12		 BMI (0x30) 		 A:11 P:25
+fb14		 BCC (0x90) 		 A:11 P:25
+fb16		 CMP (0xc9) 		 A:11 P:27
+fb18		 BNE (0xd0) 		 A:11 P:27
+fb1a		 RTS (0x60) 		 A:11 P:27
+f7ac		 LDA (0xad) Absolute(1607)=155		 A:9b P:a5
+f7af		 CMP (0xc9) 		 A:9b P:27
+f7b1		 BEQ (0xf0) 		 A:9b P:27
+f7b5		 RTS (0x60) 		 A:9b P:27
+c655		 LDA (0xa5) ZeroPage(0)=0		 A:0 P:27
+c657		 ORA (0x05) ZeroPage(16)=0		 A:0 P:27
+c659		 ORA (0x05) ZeroPage(17)=0		 A:0 P:27
+c65b		 BEQ (0xf0) 		 A:0 P:27
+c66b		 JSR (0x20) 		 A:0 P:27
+c689		 LDA (0xa9) 		 A:2 P:25
+c68b		 STA (0x8d) 		 A:2 P:25
+c68e		 LDA (0xa9) 		 A:3f P:25
+c690		 STA (0x8d) 		 A:3f P:25
+c693		 LDA (0xa9) 		 A:9a P:a5
+c695		 STA (0x8d) 		 A:9a P:a5
+c698		 LDA (0xa9) 		 A:ff P:a5
+c69a		 STA (0x8d) 		 A:ff P:a5
+c69d		 LDA (0xa9) 		 A:0 P:27
+c69f		 STA (0x8d) 		 A:0 P:27
+c6a2		 RTS (0x60) 		 A:0 P:27
+c66e		 RTS (0x60) 		 A:0 P:27
+$02 = 0
+$03 = 0

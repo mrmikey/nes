@@ -104,6 +104,8 @@ namespace NES
 				return IORegisters.ReadMemory8(addr);
 			} else if (addr < 0x8000)
 			{
+				Console.WriteLine("$02 = {0:x}", ReadMemory8((ushort)0x02));
+				Console.WriteLine("$03 = {0:x}", ReadMemory8((ushort)0x03));
 				throw new NotImplementedException();	
 			} else if (addr <= 0xFFFF)
 			{
@@ -124,6 +126,14 @@ namespace NES
 		
 		public void WriteMemory8(ushort addr, byte val)
 		{
+			if (addr == 0x00)
+			{
+				Console.Write("??[{0:x}]", val);
+			}
+			if (addr == 0x10)
+			{
+				Console.Write("!![{0:x}]", val);
+			}
 			// Depends on where!
 			if (addr < 0x2000)
 			{

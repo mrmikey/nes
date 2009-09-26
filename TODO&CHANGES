@@ -1,0 +1,6 @@
+TODO:
+* Write AddressingMode functions for write and read/write :) 
+* Make cycle count set in addressing funcs
+* Make op code length set in addressing funcs
+* Better trace facility
+* Render a name table.

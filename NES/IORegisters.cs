@@ -90,8 +90,8 @@ namespace NES
 				case 0x4014: // SPR-RAM DMA
 					throw new NotImplementedException();
 					break;
-				default:
-					throw new NotImplementedException();
+				//default:
+				//	throw new NotImplementedException();
 			}
 		}
 	}

@@ -232,6 +232,41 @@ namespace NES
 				case 0xdb: debugOp("DCPu (0xdb)"); opDCPu(); break;
 				case 0xc3: debugOp("DCPu (0xc3)"); opDCPu(); break;
 				case 0xd3: debugOp("DCPu (0xd3)"); opDCPu(); break;
+				case 0xe7: debugOp("ISPu (0xe7)"); opISBu(); break;
+				case 0xf7: debugOp("ISPu (0xf7)"); opISBu(); break;
+				case 0xef: debugOp("ISPu (0xef)"); opISBu(); break;
+				case 0xff: debugOp("ISPu (0xff)"); opISBu(); break;
+				case 0xfb: debugOp("ISPu (0xfb)"); opISBu(); break;
+				case 0xe3: debugOp("ISPu (0xe3)"); opISBu(); break;
+				case 0xf3: debugOp("ISPu (0xf3)"); opISBu(); break;
+				case 0x07: debugOp("SLOu (0x07)"); opSLOu(); break;
+				case 0x17: debugOp("SLOu (0x17)"); opSLOu(); break;
+				case 0x0f: debugOp("SLOu (0x0f)"); opSLOu(); break;
+				case 0x1f: debugOp("SLOu (0x1f)"); opSLOu(); break;
+				case 0x1b: debugOp("SLOu (0x1b)"); opSLOu(); break;
+				case 0x03: debugOp("SLOu (0x03)"); opSLOu(); break;
+				case 0x13: debugOp("SLOu (0x13)"); opSLOu(); break;
+				case 0x27: debugOp("RLAu (0x27)"); opRLAu(); break;
+				case 0x37: debugOp("RLAu (0x37)"); opRLAu(); break;
+				case 0x2F: debugOp("RLAu (0x2F)"); opRLAu(); break;
+				case 0x3F: debugOp("RLAu (0x3F)"); opRLAu(); break;
+				case 0x3b: debugOp("RLAu (0x3b)"); opRLAu(); break;
+				case 0x23: debugOp("RLAu (0x23)"); opRLAu(); break;
+				case 0x33: debugOp("RLAu (0x33)"); opRLAu(); break;
+				case 0x47: debugOp("SREu (0x47)"); opSREu(); break;
+				case 0x57: debugOp("SREu (0x57)"); opSREu(); break;
+				case 0x4F: debugOp("SREu (0x4F)"); opSREu(); break;
+				case 0x5f: debugOp("SREu (0x5f)"); opSREu(); break;
+				case 0x5b: debugOp("SREu (0x5b)"); opSREu(); break;
+				case 0x43: debugOp("SREu (0x43)"); opSREu(); break;
+				case 0x53: debugOp("SREu (0x53)"); opSREu(); break;
+				case 0x67: debugOp("RRAu (0x67)"); opRRAu(); break;
+				case 0x77: debugOp("RRAu (0x77)"); opRRAu(); break;
+				case 0x6f: debugOp("RRAu (0x6f)"); opRRAu(); break;
+				case 0x7f: debugOp("RRAu (0x7f)"); opRRAu(); break;
+				case 0x7b: debugOp("RRAu (0x7b)"); opRRAu(); break;
+				case 0x63: debugOp("RRAu (0x63)"); opRRAu(); break;
+				case 0x73: debugOp("RRAu (0x73)"); opRRAu(); break;
 				default:
 					throw new ArgumentException(String.Format("Unknown opcode: {0:x}", CurrentOpCode));
 			}
@@ -378,10 +413,14 @@ namespace NES
 		}
 		public byte IndirectX(byte addr)
 		{
-			debugOpMem("IndirectX");
+		//	debugOpMem("IndirectX");
 			addr += X;
 			CurrentOpCodeLength = 2;
-			return Engine.ReadMemory8(Engine.ReadMemory16((ushort)addr));
+			byte addr2 = (byte)(addr + 1); // for second byte (wraps round $FF -> $00 for page-boundary bug)		
+			ushort actualAddr = sortEndian(Engine.ReadMemory8((ushort)addr), Engine.ReadMemory8((ushort)addr2));
+			byte val = Engine.ReadMemory8(actualAddr);
+			debugOpMem("({0:x},X) = {1:x} = {2:x} = {3:x}", addr-X, addr, actualAddr, val);
+			return val;
 		}
 		public byte IndirectY(byte addr)
 		{
@@ -399,11 +438,13 @@ namespace NES
 		public ushort IndirectXAddr(byte addr)
 		{
 			addr += X;
-			return Engine.ReadMemory16((ushort)addr);
+			byte addr2 = (byte)(addr + 1); // for second byte (wraps round $FF -> $00 for page-boundary bug)		
+			ushort actualAddr = sortEndian(Engine.ReadMemory8((ushort)addr), Engine.ReadMemory8((ushort)addr2));
+			return actualAddr;
 		}
 		public ushort IndirectYAddr(byte addr)
 		{
-					byte lower = Engine.ReadMemory8(addr);
+			byte lower = Engine.ReadMemory8(addr);
 			byte upper = Engine.ReadMemory8((byte)(addr+1)); // page bug!
 			ushort addr2 = sortEndian(lower, upper);
 			return (ushort)(addr2 + Y);
@@ -567,13 +608,12 @@ namespace NES
 					CurrentOpCodeLength = 3;
 					break;
 				case 0x81: // (Indirect, X)
-					val1 += X;
-					addr = Engine.ReadMemory16((ushort)val1);
+					addr = IndirectXAddr(val1);
 					Cycles += 6;
 					CurrentOpCodeLength = 2;
 					break;
 				case 0x91: // (Indirect), Y
-					addr = Engine.ReadMemory16((ushort)(val1 + Y));
+					addr = IndirectYAddr(val1);
 					Cycles += 6;
 					CurrentOpCodeLength = 2;
 					break; 
@@ -1746,6 +1786,312 @@ namespace NES
 			Flags.Zero = (A == val);
 			Flags.Negative = isNegative((byte)(A - val));
 		}
+		private void opISBu()
+		{ // INC memory, then sub it from A
+			ushort addr = 0;
+			byte val1, val2, val;
+			getValues(out val1, out val2);
+			
+			// Addressing Modes
+			switch (CurrentOpCode)
+			{
+				case 0xE7: // Zero Page
+					val = ZeroPage(val1);
+					addr = (ushort)val1;
+					Cycles += 5;
+					break;
+				case 0xF7: // Zero Page, X
+					val = ZeroPageX(val1);
+					val1 += X;
+					addr = (ushort)val1;
+					Cycles += 6;
+					break;
+				case 0xEF: // Absolute
+					val = Absolute(val1, val2);
+					addr = sortEndian(val1, val2);
+					Cycles += 6;
+					break;
+				case 0xFF: // Absolute, X
+					val = AbsoluteX(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + X);
+					Cycles += 7;
+					break;
+				case 0xFB: // Absolute, Y
+					val = AbsoluteY(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + Y);
+					Cycles += 7;
+					break;
+				case 0xE3: // (Indirect, X)
+					val = IndirectX(val1);
+					addr = IndirectXAddr(val1);
+					Cycles += 9;
+					break;
+				case 0xF3: // (Indirect), Y
+					val = IndirectY(val1);
+					addr = IndirectYAddr(val1);
+					Cycles += 8;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			
+			// Increase 
+			val++;
+			Engine.WriteMemory8(addr, val);
+			
+			// Do the sub
+			byte oldA = A;
+			byte toSub = (byte)(val + ((!Flags.Carry) ? 1 : 0));
+			A = (byte)(A - toSub);
+			
+			// Flags
+			Flags.Overflow = (isNegative(A) != (((sbyte)oldA - ((sbyte)val) - ((!Flags.Carry) ? 1 : 0)) < 0)) ? true : false;
+			Flags.Carry = ((oldA - toSub) < 0) ? false : true; // Todo: Check this
+			setZeroNegFlags(A);
+		}
+		private void opSLOu()
+		{ // ASL + ORA
+			ushort addr = 0;
+			byte val1, val2, val;
+			getValues(out val1, out val2);
+			
+			// Addressing mode
+			switch (CurrentOpCode)
+			{
+				case 0x07: // Zero Page
+					val = ZeroPage(val1);
+					addr = (ushort)val1;
+					Cycles += 5;
+					break;
+				case 0x17: // Zero Page, X
+					val = ZeroPageX(val1);
+					val1 += X;
+					addr = (ushort)val1;
+					Cycles += 6;
+					break;
+				case 0x0F: // Absolute
+					val = Absolute(val1, val2);
+					addr = sortEndian(val1, val2);
+					Cycles += 6;
+					break;
+				case 0x1F: // Absolute, X
+					val = AbsoluteX(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + X);
+					Cycles += 7;
+					break;
+				case 0x1B: // Absolute, Y
+					val = AbsoluteY(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + Y);
+					Cycles += 7;
+					break;
+				case 0x03: // (Indirect, X)
+					val = IndirectX(val1);
+					addr = IndirectXAddr(val1);
+					Cycles += 9;
+					break;
+				case 0x13: // (Indirect), Y
+					val = IndirectY(val1);
+					addr = IndirectYAddr(val1);
+					Cycles += 8;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			
+		
+			byte newVal = (byte)(val << 1); // ASL
+			Engine.WriteMemory8(addr, newVal); // ASL
+			A = (byte)(A | newVal); // ORA
+			Flags.Carry = ((val & 128) > 0); // ASL
+			setZeroNegFlags(A); // ORA [Could be ASL setZeroNegFlags instead?
+		}
+		private void opRLAu()
+		{ // ROL + AND
+			ushort addr = 0;
+			byte val1, val2, val;
+			getValues(out val1, out val2);
+			
+			// Addressing mode
+			switch (CurrentOpCode)
+			{
+				case 0x27: // Zero Page
+					val = ZeroPage(val1);
+					addr = (ushort)val1;
+					Cycles += 5;
+					break;
+				case 0x37: // Zero Page, X
+					val = ZeroPageX(val1);
+					val1 += X;
+					addr = (ushort)val1;
+					Cycles += 6;
+					break;
+				case 0x2F: // Absolute
+					val = Absolute(val1, val2);
+					addr = sortEndian(val1, val2);
+					Cycles += 6;
+					break;
+				case 0x3F: // Absolute, X
+					val = AbsoluteX(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + X);
+					Cycles += 7;
+					break;
+				case 0x3B: // Absolute, Y
+					val = AbsoluteY(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + Y);
+					Cycles += 7;
+					break;
+				case 0x23: // (Indirect, X)
+					val = IndirectX(val1);
+					addr = IndirectXAddr(val1);
+					Cycles += 9;
+					break;
+				case 0x33: // (Indirect), Y
+					val = IndirectY(val1);
+					addr = IndirectYAddr(val1);
+					Cycles += 8;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			
+			// ROL
+			byte oldCarry = (byte)((Flags.Carry) ? 1 : 0);
+			Flags.Carry = ((val & 128) > 0);
+			val = (byte)((val << 1) | oldCarry); // LSB is filled with old Cary Bit
+			//setZeroNegFlags(val);
+			Engine.WriteMemory8(addr, val);
+			
+			// AND
+			A = (byte)(A & val);
+			setZeroNegFlags(A);
+		}
+		private void opSREu()
+		{ // LSR + EOR
+			ushort addr = 0;
+			byte val1, val2, val;
+			getValues(out val1, out val2);
+			
+			// Addressing mode
+			switch (CurrentOpCode)
+			{
+				case 0x47: // Zero Page
+					val = ZeroPage(val1);
+					addr = (ushort)val1;
+					Cycles += 5;
+					break;
+				case 0x57: // Zero Page, X
+					val = ZeroPageX(val1);
+					val1 += X;
+					addr = (ushort)val1;
+					Cycles += 6;
+					break;
+				case 0x4F: // Absolute
+					val = Absolute(val1, val2);
+					addr = sortEndian(val1, val2);
+					Cycles += 6;
+					break;
+				case 0x5F: // Absolute, X
+					val = AbsoluteX(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + X);
+					Cycles += 7;
+					break;
+				case 0x5B: // Absolute, Y
+					val = AbsoluteY(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + Y);
+					Cycles += 7;
+					break;
+				case 0x43: // (Indirect, X)
+					val = IndirectX(val1);
+					addr = IndirectXAddr(val1);
+					Cycles += 9;
+					break;
+				case 0x53: // (Indirect), Y
+					val = IndirectY(val1);
+					addr = IndirectYAddr(val1);
+					Cycles += 8;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			
+			// LSR
+			Flags.Carry = ((val & 1) > 0);
+			val = (byte)((val >> 1) & 0x7F); // Mask so MSB is always 0.
+			//setZeroNegFlags(val);
+			Engine.WriteMemory8(addr, val);
+			
+			// EOR
+			A = (byte)(A ^ val);
+			setZeroNegFlags(A);
+		}
+		private void opRRAu()
+		{ // ROR + AND
+			ushort addr = 0;
+			byte val1, val2, val;
+			getValues(out val1, out val2);
+			
+			// Addressing mode
+			switch (CurrentOpCode)
+			{
+				case 0x67: // Zero Page
+					val = ZeroPage(val1);
+					addr = (ushort)val1;
+					Cycles += 5;
+					break;
+				case 0x77: // Zero Page, X
+					val = ZeroPageX(val1);
+					val1 += X;
+					addr = (ushort)val1;
+					Cycles += 6;
+					break;
+				case 0x6F: // Absolute
+					val = Absolute(val1, val2);
+					addr = sortEndian(val1, val2);
+					Cycles += 6;
+					break;
+				case 0x7F: // Absolute, X
+					val = AbsoluteX(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + X);
+					Cycles += 7;
+					break;
+				case 0x7B: // Absolute, Y
+					val = AbsoluteY(val1, val2);
+					addr = (ushort)(sortEndian(val1, val2) + Y);
+					Cycles += 7;
+					break;
+				case 0x63: // (Indirect, X)
+					val = IndirectX(val1);
+					addr = IndirectXAddr(val1);
+					Cycles += 9;
+					break;
+				case 0x73: // (Indirect), Y
+					val = IndirectY(val1);
+					addr = IndirectYAddr(val1);
+					Cycles += 8;
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+			
+			// ROR
+			byte oldCarry = (byte)((Flags.Carry) ? 1 : 0);
+			Flags.Carry = ((val & 1) > 0);
+			val = (byte)((val >> 1) | (oldCarry << 7)); // MSB is filled with old Cary Bit
+			// setZeroNegFlags(val);
+			Engine.WriteMemory8(addr, val);
+
+			// ADC
+			byte oldA = A;
+			byte toAdd = (byte)(val + ((Flags.Carry) ? 1 : 0));
+			A = (byte)(A + toAdd);
+			
+			// Flags [ADC]
+			Flags.Overflow = (isNegative(A) != (((sbyte)val + ((Flags.Carry) ? 1 : 0) + (sbyte)oldA) < 0)) ? true : false;
+			Flags.Carry = ((oldA + toAdd) > 255) ? true : false;
+			setZeroNegFlags(A);
+			
+		}
+		
 		#endregion
 		
 	}

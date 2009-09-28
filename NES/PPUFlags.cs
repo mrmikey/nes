@@ -26,7 +26,7 @@ namespace NES
 	
 		// $2005 - VRAM Address 1 - Scroll Register (Write)
 		private bool writeLatch = true; // used for 1st/2nd writes to VRAMAddr1/VRAMAddr2
-		public ushort Loopy_T, Loopy_V;
+		public ushort Loopy_T = 0x2000, Loopy_V = 0x2000;
 		public byte Loopy_X;
 		public byte VramAddrReg1
 		{
@@ -87,6 +87,7 @@ namespace NES
 					Loopy_T &= 0x7F00;
 					Loopy_T |= value;
 					Loopy_V = Loopy_T;
+					Console.WriteLine("WRITE: {0:x}", Loopy_T);
 				}
 			
 				writeLatch = !writeLatch;
@@ -100,15 +101,17 @@ namespace NES
 		{
 			get 
 			{ 
-				byte ret = status; // save status before we unset bit 7
-				status = (byte)(status & 127); // unset bit 7
-				writeLatch = true; // true = 1st write
-				return ret;  
+				return status;
 			}
 			set
 			{
 				status = value;
 			}
+		}
+		public void OnStatusRead()
+		{
+			status = (byte)(status & 127); // unset bit 7
+			writeLatch = true; // true = 1st write
 		}
 	
 		// Control 1
@@ -121,8 +124,12 @@ namespace NES
 		}
 		public byte IncrementAddress // Bit 2, Number to increment addr by each read
 		{
-			get { return (byte)((Control1 & 4) >> 2); }
+			get { return (byte)(((Control1 & 4) > 0) ? 32 : 1); }
 			set { Control1 = (byte)((Control1 & 0xFB) | (value << 2)); } // 0xFB - 11111011
+		}
+		public byte BGTable // Bit 4, the Pattern Table BG is stored in [returns 0 or 0x1]
+		{
+			get { return (byte)((Control1 & 32) >> 5); }
 		}
 		
 		public PPUFlags()

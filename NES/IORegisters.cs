@@ -45,13 +45,17 @@ namespace NES
 					throw new ArgumentException();
 					break;
 				case 0x2007: // VRAM I/O
-					return PPU.ReadMemory8(PPUFlags.VRAMAddress);
+					return PPU.VRAMRead();
 					break;
 				case 0x4014: // SPR-RAM DMA
 					throw new ArgumentException();
 					break;
+				case 0x4016: // Joypad 1
+					return Engine.Joypads.Read(0);
+				case 0x4017: // Joypad 2
+					return Engine.Joypads.Read(1);
 				default:
-					throw new NotImplementedException();
+					throw new NotImplementedException(String.Format("Uh-oh, attempting read to {0:x} and this register is not implemented!", addr));
 			}
 		}
 		
@@ -76,7 +80,7 @@ namespace NES
 					PPUFlags.SprAddr = val;
 					break;
 				case 0x2004: // SPR-RAM I/O
-					PPU.WriteSprRam(val);
+					throw new NotImplementedException();
 					break;
 				case 0x2005: // VRAM Address 1
 					PPUFlags.VramAddrReg1 = val;
@@ -85,11 +89,19 @@ namespace NES
 					PPUFlags.VramAddrReg2 = val;
 					break;
 				case 0x2007: // VRAM I/O
-					PPU.ReadMemory8(PPUFlags.VRAMAddress);
+					PPU.WriteMemory8(PPU.Flags.Loopy_V, val);
+					PPUFlags.Loopy_V += PPUFlags.IncrementAddress;
 					break;
 				case 0x4014: // SPR-RAM DMA
-					throw new NotImplementedException();
+					PPU.SpriteDMA(val);
 					break;
+				case 0x4016: // Joypad 1
+					Engine.Joypads.Write(0, val);
+					break;
+				case 0x4017: // Joypad 2
+					Engine.Joypads.Write(1, val);
+					break;
+				//default:
 				//default:
 				//	throw new NotImplementedException();
 			}

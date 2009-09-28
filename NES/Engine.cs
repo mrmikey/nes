@@ -11,14 +11,19 @@ namespace NES
 		public PPU PPU;
 		public Cartridge Cartridge;
 		public IORegisters IORegisters;
+		public Joypads Joypads;
+		public Graphics Graphics;
+		public bool Running = true;
 		
 		public Engine(string filename)
 		{
 			CPU = new CPU(this);
 			PPU = new PPU(this);
 			IORegisters = new IORegisters(this, PPU);
-			
+			Joypads = new Joypads();
+				
 			loadiNes(filename);
+			Graphics = new Graphics(this, 256,240);
 		}
 		
 		private void loadiNes(string filename)
@@ -70,22 +75,21 @@ namespace NES
 			}
 			
 			// Load CHR-ROM
-			for (int i = 0; i < numCHR; i++)
-			{
-				Cartridge.CHRROMBanks[i] = new byte[Cartridge.CHRLength];
-				fs.Read(Cartridge.CHRROMBanks[i], 0, Cartridge.CHRLength);
-			}
+			Cartridge.LoadCHR(fs);
+			
 		}
 		
 		public void Run()
 		{
 			CPU.Reset();
-			while (true)
+			while (Running)
 			{
 				// Accuracy can be up to 6/7 cycles out if they access Registers! HM. Todo
 				int cpuCycles = CPU.Run();
 				PPU.Run(cpuCycles);
 			}
+			
+			Graphics.Deinitialise();
 		}
 		
 		public byte ReadMemory8(ushort addr)
@@ -126,14 +130,6 @@ namespace NES
 		
 		public void WriteMemory8(ushort addr, byte val)
 		{
-			if (addr == 0x00)
-			{
-				Console.Write("??[{0:x}]", val);
-			}
-			if (addr == 0x10)
-			{
-				Console.Write("!![{0:x}]", val);
-			}
 			// Depends on where!
 			if (addr < 0x2000)
 			{

@@ -13,6 +13,7 @@ namespace NES
 		public byte CurrentOpCode = 0;
 		public CPUFlags Flags = new CPUFlags();
 		public Stack Stack;
+		public bool NMI = false;
 
 		public CPU(Engine engine)
 		{
@@ -22,18 +23,29 @@ namespace NES
 		
 		public void Reset()
 		{
-			PC = 0xc000; //;Engine.ReadMemory16(0xFFFC);
+			PC = Engine.ReadMemory16(0xFFFC);
 		}
 		
 		public int Run()
 		{
 			Cycles = 0;
-			CurrentOpCode = Engine.ReadMemory8(PC);
 			CurrentOpCodeLength = 0;
 			ChangedPC = false;
 			
+			// Interrupts
+			if (NMI)
+			{
+				// Handle the NMI (VBlank!)
+				Flags.Break = false;
+				Stack.Push16(PC);
+				Stack.Push8(Flags.Byte);
+				Flags.InterruptDisable = true;
+				PC = Engine.ReadMemory16(0xFFFA);
+				NMI = false;
+			}
+			
 			// Call relevant instruction
-			int oldCycles = Cycles;
+			CurrentOpCode = Engine.ReadMemory8(PC);
 			switch (CurrentOpCode)
 			{
 				case 0xa9: debugOp("LDA (0xa9)"); opLDA(); break;
@@ -285,6 +297,9 @@ namespace NES
 			if (Cycles == 0)
 				throw new Exception();
 			
+			if (debugLatch == true)
+				Console.WriteLine("");
+			
 			return Cycles;
 		}
 		
@@ -293,8 +308,7 @@ namespace NES
 		private bool debugLatch = false;
 		private void debugOp(string op)
 		{
-			if (debugLatch == true)
-				Console.WriteLine("");
+
 				
 			Console.Write("{0:x}\t\t {1} ", PC, op);
 			debugLatch = true;
@@ -309,7 +323,7 @@ namespace NES
 		
 		public void debugOpMem(string mem, params object[] format)
 		{
-			Console.Write(String.Format(mem, format));
+			//Console.Write(String.Format(mem, format));
 			
 		}
 		

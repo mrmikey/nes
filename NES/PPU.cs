@@ -13,13 +13,13 @@ namespace NES
 	{
 		private Engine Engine;
 		public PPUFlags Flags = new PPUFlags();
-		public decimal CPUScaling = 3.2m; // Number of PPU Cycles per CPU cycle [PAL; NTSC is 3]
+		public decimal CPUScaling = 3m; // Number of PPU Cycles per CPU cycle [PAL; NTSC is 3]
 		public int Cycle = 0;
 		public float CycleCarry = 0;
 		public int VBlankTime = 70; // Number of Scanlines we're in VBlank for [PAL; NTSC is 20]
 		public int CurrentScaline = 0; // Pre-draw
 		public int VBlankAt = 240; // Scanline to start VBlank at
-		public int EndScanline = 240 + 1 + 1 + 70; // PAL... hardcode for now, should use VBlankTime todo
+		public int EndScanline = 900; // PAL... hardcode for now, should use VBlankTime todo
 		
 	//	private byte[,] PatternTables = new byte[2, 0x1000];
 		private byte[] SpriteRAM = new byte[256];
@@ -29,7 +29,6 @@ namespace NES
 		public byte[] AttributeShiftTable = new byte[0x400];
 		public byte[] AttributeLocationTable = new byte[0x400];
 		public int[] Palette = new int[] { 
-			0xFF0000, 0x00FF00, 0x0000FF, 0xFFFFFF,
 			0x757575, 0x271B8F, 0x0000AB, 0x47009F, 0x8F0077, 0xAB0013, 0xA70000, 0x7F0B00,
 			0x432F00, 0x004700, 0x005100, 0x003F17, 0x1B3F5F, 0x000000, 0x000000, 0x000000,
 			0xBCBCBC, 0x0073EF, 0x233BEF, 0x8300F3, 0xBF00BF, 0xE7005B, 0xDB2B00, 0xCB4F0F,
@@ -91,8 +90,7 @@ namespace NES
 				int x = i & 31; // bits 0-4 are x-scroll
 				int y = (i & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 				y = (y > 29) ? 29 : y;
-					Console.WriteLine("y={0}", y);
-				Engine.Graphics.DrawTile(CHRCache, tile, x, y, attribute);
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 				if (tile > 0)
 					Console.ReadKey();
 			}
@@ -104,7 +102,7 @@ namespace NES
 			int endCycle = 341; // 0-340 cycles inclusive for 341 cycles total.
 			
 			// Timing!
-			for (int i = 0; i != ppuCycles; ++i)
+			for (int i = 0; i < ppuCycles; ++i)
 			{
 				++Cycle;
 				if (Cycle == 256) // Significance?
@@ -128,7 +126,7 @@ namespace NES
 					// Start of VBlank (240 is idle)
 					if (CurrentScaline == 241)
 					{
-						//dumpNametable();
+						dumpNametable();
 						Engine.Graphics.Render();
 						Flags.Status |= 0x80; // Set VBlank flag in $2002
 						Engine.CPU.NMI = ((Flags.Control1 & 0x80) > 1) ? true : false; // Only trigger NMI if they want us to in $2000
@@ -145,113 +143,112 @@ namespace NES
 					Flags.Status = 0; // ALL 0?!
 				}
 				
-				// Datas! 
-				switch(Cycle)
-				{	
-					// Cycle 0 - Get tile
-					// Cycle 1 - Gets the pattern address for the tile
-					// Cycle 2 - Gets attribute addr[/shift]
-					// Cycle 3 - Apply attribute
-					// Cycle 4 - Nothing
-					// Cycle 5 - Get lower bit from nt [We do upper too]
-					// Cycle 6 - Get pattern address for upper two bits [We don't need this]
-					// Cycle 7 - Get upper bit from nt [Did this in Cycle 5]
-					// Rinse and repeat.
-				
-					// Cycle 0 - We'll do all of the above! :)
-					case   0:	case   8:	case  16:	case  24:	
-					case  32:	case  40:	case  48:	case  56:
-					case  64:	case  72:	case  80:	case  88:	
-					case  96:	case 104:	case 112:	case 120:
-					case 128:	case 136:	case 144:	case 152:	
-					case 160:	case 168:	case 176:	case 184:
-					case 192:	case 200:	case 208:	case 216:	
-					case 224:	case 232:	case 240:	case 248:
-						// Find out which pattern to use
-						byte tile = Nametables[Flags.Loopy_V];
-
-						int pattern_addr = (tile << 5) | (Flags.BGTable << 14) | (7 << 8);
+				// :D
+				if (CurrentScaline < 240)
+				{
+					// Datas! 
+					switch(Cycle)
+					{	
+						// Cycle 0 - Get tile
+						// Cycle 1 - Gets the pattern address for the tile
+						// Cycle 2 - Gets attribute addr[/shift]
+						// Cycle 3 - Apply attribute
+						// Cycle 4 - Nothing
+						// Cycle 5 - Get lower bit from nt [We do upper too]
+						// Cycle 6 - Get pattern address for upper two bits [We don't need this]
+						// Cycle 7 - Get upper bit from nt [Did this in Cycle 5]
+						// Rinse and repeat.
+						// Buuut we're not gonna do that -- Just make sure we update Loopy_V at cycle 251
 						
-						// Get attribute
-						int attribute_addr = 0x23C0 | (Flags.Loopy_V & 0xC00) | (AttributeLocationTable[Flags.Loopy_V & 0x3FF]);
-						int attribute_shift = AttributeShiftTable[Flags.Loopy_V & 0x3FF];
-						int attribute = ((Nametables[attribute_addr] >> attribute_shift) & 3) << 2; // Remember attribute is upper 2 bits of color.
-						
-						// Now we have the pattern_addr and the attribute, we can render! :)
-						int x = Flags.Loopy_V & 31; // bits 0-4 are x-scroll
-						int y = (Flags.Loopy_V & 0x3E0) >> 5; // bits 5-9 are y-scroll.
-						y = (y > 29) ? 29 : y;
-							Console.WriteLine("y={0}", y);
-					//	Engine.Graphics.DrawTile(CHRCache, tile, x, y, attribute);
-						
-						if (tile > 0)
-							Console.ReadKey();
-						
-						break;
-						
-					case   3:	case  11:	case  19:	case  27:	
-					case  35:	case  43:	case  51:	case  59:
-					case  67:	case  75:	case  83:	case  91:	
-					case  99:	case 107:	case 115:	case 123:
-					case 131:	case 139:	case 147:	case 155:	
-					case 163:	case 171:	case 179:	case 187:
-					case 195:	case 203:	case 211:	case 219:	
-					case 227:	case 235:	case 243:
-					
-						if ((Flags.Loopy_V & 0x1F) == 0x1F)
-						 	 Flags.Loopy_V ^= 0x41F;
-						else	
-							++Flags.Loopy_V;
-							
-						break;
-						
-					case 323:	case 331:
-							
-						if ((Flags.Loopy_V & 0x1F) == 0x1F)
-						 	 Flags.Loopy_V ^= 0x41F;
-						else	
-							++Flags.Loopy_V;
-							
-						
-						break;
-						
-						
-					case 251:
-					
-						if ((Flags.Loopy_V & 0x1F) == 0x1F)
-						 	 Flags.Loopy_V ^= 0x41F;
-						else	
-							++Flags.Loopy_V;
+						// Cycle 0 - We'll do all of the above! :)
+						case   0:	case   8:	case  16:	case  24:	
+						case  32:	case  40:	case  48:	case  56:
+						case  64:	case  72:	case  80:	case  88:	
+						case  96:	case 104:	case 112:	case 120:
+						case 128:	case 136:	case 144:	case 152:	
+						case 160:	case 168:	case 176:	case 184:
+						case 192:	case 200:	case 208:	case 216:	
+						case 224:	case 232:	case 240:	case 248:
+							// Find out which pattern to use
+							byte tile = Nametables[Flags.Loopy_V];
 	
+							int pattern_addr = (tile << 5) | (Flags.BGTable << 14) | (7 << 8);
+							
+							// Get attribute
+							int attribute_addr = 0x23C0 | (Flags.Loopy_V & 0xC00) | (AttributeLocationTable[Flags.Loopy_V & 0x3FF]);
+							int attribute_shift = AttributeShiftTable[Flags.Loopy_V & 0x3FF];
+							int attribute = ((Nametables[attribute_addr] >> attribute_shift) & 3) << 2; // Remember attribute is upper 2 bits of color.
+							
+							// Now we have the pattern_addr and the attribute, we can render! :)
+							int x = Flags.Loopy_V & 31; // bits 0-4 are x-scroll
+							int y = (Flags.Loopy_V & 0x3E0) >> 5; // bits 5-9 are y-scroll.
+							y = (y > 29) ? 29 : y;
+					//		Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+							
+							
+							break;
+							
+						case   3:	case  11:	case  19:	case  27:	
+						case  35:	case  43:	case  51:	case  59:
+						case  67:	case  75:	case  83:	case  91:	
+						case  99:	case 107:	case 115:	case 123:
+						case 131:	case 139:	case 147:	case 155:	
+						case 163:	case 171:	case 179:	case 187:
+						case 195:	case 203:	case 211:	case 219:	
+						case 227:	case 235:	case 243:
 						
-	
-						if ((Flags.Loopy_V & 0x7000) == 0x7000)
-						{
-							int tmp = Flags.Loopy_V & 0x3E0;
-							//reset tile y offset 12 - 14 in addr
-							Flags.Loopy_V &= 0xFFF;
-							switch (tmp)
+							if ((Flags.Loopy_V & 0x1F) == 0x1F)
+							 	 Flags.Loopy_V ^= 0x41F;
+							else	
+								++Flags.Loopy_V;
+								
+							break;
+							
+						case 323:	case 331:
+								
+							if ((Flags.Loopy_V & 0x1F) == 0x1F)
+							 	 Flags.Loopy_V ^= 0x41F;
+							else	
+								++Flags.Loopy_V;
+								
+							
+							break;
+							
+							
+						case 251:
+						
+							if ((Flags.Loopy_V & 0x1F) == 0x1F)
+							 	 Flags.Loopy_V ^= 0x41F;
+							else	
+								++Flags.Loopy_V;
+		
+							
+		
+							if ((Flags.Loopy_V & 0x7000) == 0x7000)
 							{
-								//29, flip bit 11
-								case 0x3A0:
-									Flags.Loopy_V ^= 0xBA0;
-									break;
-								case 0x3E0: //31, back to 0
-									Flags.Loopy_V ^= 0x3E0;
-									break;
-								default: //inc y scroll if not reached
-									Flags.Loopy_V += 0x20;
-									break;
+								int tmp = Flags.Loopy_V & 0x3E0;
+								//reset tile y offset 12 - 14 in addr
+								Flags.Loopy_V &= 0xFFF;
+								switch (tmp)
+								{
+									//29, flip bit 11
+									case 0x3A0:
+										Flags.Loopy_V ^= 0xBA0;
+										break;
+									case 0x3E0: //31, back to 0
+										Flags.Loopy_V ^= 0x3E0;
+										break;
+									default: //inc y scroll if not reached
+										Flags.Loopy_V += 0x20;
+										break;
+								}
 							}
-						}
-						else //inc fine y
-							Flags.Loopy_V += 0x1000;
-							
-						break;
-					
-					// Buuut we're not gonna do that -- Just make sure we update Loopy_V at cycle 251
+							else //inc fine y
+								Flags.Loopy_V += 0x1000;
+								
+							break;
+					} 
 				}
-				
 			}
 		}
 	
@@ -329,11 +326,11 @@ namespace NES
 		{
 			addr &= 0x3FFF; // mirroring.
 			if (addr < 0x2000)	// Pattern table
-				Engine.Cartridge.CHRWrite(addr, val);
+				return; // Todo: support chr ram
 			else if ((addr >= 0x2000) && (addr < 0x3F00)) // Nametables
 				Nametables[addr] = val;
 			else if ((addr >= 0x3F00) && (addr < 0x4000)) // Palettes Todo: Mirroring
-				Palettes[addr - 0x3F00] = val;
+				Palettes[addr & 0x1F] = val;
 			else
 				throw new NotImplementedException();
 		}

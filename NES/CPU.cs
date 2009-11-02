@@ -14,7 +14,9 @@ namespace NES
 		public CPUFlags Flags = new CPUFlags();
 		public Stack Stack;
 		public bool NMI = false;
-
+		public bool IRQ = false;
+		public Tracelogger Debug = new Tracelogger("trace.txt");
+		
 		public CPU(Engine engine)
 		{
 			this.Engine = engine;
@@ -42,290 +44,284 @@ namespace NES
 				Flags.InterruptDisable = true;
 				PC = Engine.ReadMemory16(0xFFFA);
 				NMI = false;
+			} else if (IRQ)
+			{
+				// Handle the IRQ (APU?)
+				Flags.Break = false;
+				Stack.Push16(PC);
+				Stack.Push8(Flags.Byte);
+				Flags.InterruptDisable = true;
+				PC = Engine.ReadMemory16(0xFFFE);
 			}
+			
+			// Debug
+			Debug.StartLine();
+			Debug.SetRegisters(A, X, Y, Flags);
+			Debug.PC = PC;
 			
 			// Call relevant instruction
 			CurrentOpCode = Engine.ReadMemory8(PC);
 			switch (CurrentOpCode)
 			{
-				case 0xa9: debugOp("LDA (0xa9)"); opLDA(); break;
-				case 0xa5: debugOp("LDA (0xa5)"); opLDA(); break;
-				case 0xb5: debugOp("LDA (0xb5)"); opLDA(); break;
-				case 0xad: debugOp("LDA (0xad)"); opLDA(); break;
-				case 0xbd: debugOp("LDA (0xbd)"); opLDA(); break;
-				case 0xb9: debugOp("LDA (0xb9)"); opLDA(); break;
-				case 0xa1: debugOp("LDA (0xa1)"); opLDA(); break;
-				case 0xb1: debugOp("LDA (0xb1)"); opLDA(); break;
-				case 0xa2: debugOp("LDX (0xa2)"); opLDX(); break;
-				case 0xa6: debugOp("LDX (0xa6)"); opLDX(); break;
-				case 0xb6: debugOp("LDX (0xb6)"); opLDX(); break;
-				case 0xae: debugOp("LDX (0xae)"); opLDX(); break;
-				case 0xbe: debugOp("LDX (0xbe)"); opLDX(); break;
-				case 0xa0: debugOp("LDY (0xa0)"); opLDY(); break;
-				case 0xa4: debugOp("LDY (0xa4)"); opLDY(); break;
-				case 0xb4: debugOp("LDY (0xb4)"); opLDY(); break;
-				case 0xac: debugOp("LDY (0xac)"); opLDY(); break;
-				case 0xbc: debugOp("LDY (0xbc)"); opLDY(); break;
-				case 0x85: debugOp("STA (0x85)"); opSTA(); break;
-				case 0x95: debugOp("STA (0x95)"); opSTA(); break;
-				case 0x8d: debugOp("STA (0x8d)"); opSTA(); break;
-				case 0x9d: debugOp("STA (0x9d)"); opSTA(); break;
-				case 0x99: debugOp("STA (0x99)"); opSTA(); break;
-				case 0x81: debugOp("STA (0x81)"); opSTA(); break;
-				case 0x91: debugOp("STA (0x91)"); opSTA(); break;
-				case 0x86: debugOp("STX (0x86)"); opSTX(); break;
-				case 0x96: debugOp("STX (0x96)"); opSTX(); break;
-				case 0x8e: debugOp("STX (0x8e)"); opSTX(); break;
-				case 0x84: debugOp("STY (0x84)"); opSTY(); break;
-				case 0x94: debugOp("STY (0x94)"); opSTY(); break;
-				case 0x8c: debugOp("STY (0x8c)"); opSTY(); break;
-				case 0xaa: debugOp("TAX (0xaa)"); opTAX(); break;
-				case 0xa8: debugOp("TAY (0xa8)"); opTAY(); break;
-				case 0x8a: debugOp("TXA (0x8a)"); opTXA(); break;
-				case 0x98: debugOp("TYA (0x98)"); opTYA(); break;
-				case 0xba: debugOp("TSX (0xba)"); opTSX(); break;
-				case 0x9a: debugOp("TXS (0x9a)"); opTXS(); break;
-				case 0x48: debugOp("PHA (0x48)"); opPHA(); break;
-				case 0x08: debugOp("PHP (0x08)"); opPHP(); break;
-				case 0x68: debugOp("PLA (0x68)"); opPLA(); break;
-				case 0x28: debugOp("PLP (0x28)"); opPLP(); break;
-				case 0x29: debugOp("AND (0x29)"); opAND(); break;
-				case 0x25: debugOp("AND (0x25)"); opAND(); break;
-				case 0x35: debugOp("AND (0x35)"); opAND(); break;
-				case 0x2d: debugOp("AND (0x2d)"); opAND(); break;
-				case 0x3d: debugOp("AND (0x3d)"); opAND(); break;
-				case 0x39: debugOp("AND (0x39)"); opAND(); break;
-				case 0x21: debugOp("AND (0x21)"); opAND(); break;
-				case 0x31: debugOp("AND (0x31)"); opAND(); break;
-				case 0x49: debugOp("EOR (0x49)"); opEOR(); break;
-				case 0x45: debugOp("EOR (0x45)"); opEOR(); break;
-				case 0x55: debugOp("EOR (0x55)"); opEOR(); break;
-				case 0x4d: debugOp("EOR (0x4d)"); opEOR(); break;
-				case 0x5d: debugOp("EOR (0x5d)"); opEOR(); break;
-				case 0x59: debugOp("EOR (0x59)"); opEOR(); break;
-				case 0x41: debugOp("EOR (0x41)"); opEOR(); break;
-				case 0x51: debugOp("EOR (0x51)"); opEOR(); break;
-				case 0x09: debugOp("ORA (0x09)"); opORA(); break;
-				case 0x05: debugOp("ORA (0x05)"); opORA(); break;
-				case 0x15: debugOp("ORA (0x15)"); opORA(); break;
-				case 0x0d: debugOp("ORA (0x0d)"); opORA(); break;
-				case 0x1d: debugOp("ORA (0x1d)"); opORA(); break;
-				case 0x19: debugOp("ORA (0x19)"); opORA(); break;
-				case 0x01: debugOp("ORA (0x01)"); opORA(); break;
-				case 0x11: debugOp("ORA (0x11)"); opORA(); break;
-				case 0x24: debugOp("BIT (0x24)"); opBIT(); break;
-				case 0x2c: debugOp("BIT (0x2c)"); opBIT(); break;
-				case 0x69: debugOp("ADC (0x69)"); opADC(); break;
-				case 0x65: debugOp("ADC (0x65)"); opADC(); break;
-				case 0x75: debugOp("ADC (0x75)"); opADC(); break;
-				case 0x6d: debugOp("ADC (0x6d)"); opADC(); break;
-				case 0x7d: debugOp("ADC (0x7d)"); opADC(); break;
-				case 0x79: debugOp("ADC (0x79)"); opADC(); break;
-				case 0x61: debugOp("ADC (0x61)"); opADC(); break;
-				case 0x71: debugOp("ADC (0x71)"); opADC(); break;
-				case 0xe9: debugOp("SBC (0xe9)"); opSBC(); break;
-				case 0xe5: debugOp("SBC (0xe5)"); opSBC(); break;
-				case 0xf5: debugOp("SBC (0xf5)"); opSBC(); break;
-				case 0xed: debugOp("SBC (0xed)"); opSBC(); break;
-				case 0xfd: debugOp("SBC (0xfd)"); opSBC(); break;
-				case 0xf9: debugOp("SBC (0xf9)"); opSBC(); break;
-				case 0xe1: debugOp("SBC (0xe1)"); opSBC(); break;
-				case 0xf1: debugOp("SBC (0xf1)"); opSBC(); break;
-				case 0xeb: debugOp("SBC (0xeb)"); opSBC(); break;
-				case 0xc9: debugOp("CMP (0xc9)"); opCMP(); break;
-				case 0xc5: debugOp("CMP (0xc5)"); opCMP(); break;
-				case 0xd5: debugOp("CMP (0xd5)"); opCMP(); break;
-				case 0xcd: debugOp("CMP (0xcd)"); opCMP(); break;
-				case 0xdd: debugOp("CMP (0xdd)"); opCMP(); break;
-				case 0xd9: debugOp("CMP (0xd9)"); opCMP(); break;
-				case 0xc1: debugOp("CMP (0xc1)"); opCMP(); break;
-				case 0xd1: debugOp("CMP (0xd1)"); opCMP(); break;
-				case 0xe0: debugOp("CPX (0xe0)"); opCPX(); break;
-				case 0xe4: debugOp("CPX (0xe4)"); opCPX(); break;
-				case 0xec: debugOp("CPX (0xec)"); opCPX(); break;
-				case 0xc0: debugOp("CPY (0xc0)"); opCPY(); break;
-				case 0xc4: debugOp("CPY (0xc4)"); opCPY(); break;
-				case 0xcc: debugOp("CPY (0xcc)"); opCPY(); break;
-				case 0xe6: debugOp("INC (0xe6)"); opINC(); break;
-				case 0xf6: debugOp("INC (0xf6)"); opINC(); break;
-				case 0xee: debugOp("INC (0xee)"); opINC(); break;
-				case 0xfe: debugOp("INC (0xfe)"); opINC(); break;
-				case 0xe8: debugOp("INX (0xe8)"); opINX(); break;
-				case 0xc8: debugOp("INY (0xc8)"); opINY(); break;
-				case 0xc6: debugOp("DEC (0xc6)"); opDEC(); break;
-				case 0xd6: debugOp("DEC (0xd6)"); opDEC(); break;
-				case 0xce: debugOp("DEC (0xce)"); opDEC(); break;
-				case 0xde: debugOp("DEC (0xde)"); opDEC(); break;
-				case 0xca: debugOp("DEX (0xca)"); opDEX(); break;
-				case 0x88: debugOp("DEY (0x88)"); opDEY(); break;
-				case 0x0a: debugOp("ASL (0x0a)"); opASL(); break;
-				case 0x06: debugOp("ASL (0x06)"); opASL(); break;
-				case 0x16: debugOp("ASL (0x16)"); opASL(); break;
-				case 0x0e: debugOp("ASL (0x0e)"); opASL(); break;
-				case 0x1e: debugOp("ASL (0x1e)"); opASL(); break;
-				case 0x4a: debugOp("LSR (0x4a)"); opLSR(); break;
-				case 0x46: debugOp("LSR (0x46)"); opLSR(); break;
-				case 0x56: debugOp("LSR (0x56)"); opLSR(); break;
-				case 0x4e: debugOp("LSR (0x4e)"); opLSR(); break;
-				case 0x5e: debugOp("LSR (0x5e)"); opLSR(); break;
-				case 0x2a: debugOp("ROL (0x2a)"); opROL(); break;
-				case 0x26: debugOp("ROL (0x26)"); opROL(); break;
-				case 0x36: debugOp("ROL (0x36)"); opROL(); break;
-				case 0x2e: debugOp("ROL (0x2e)"); opROL(); break;
-				case 0x3e: debugOp("ROL (0x3e)"); opROL(); break;
-				case 0x6a: debugOp("ROR (0x6a)"); opROR(); break;
-				case 0x66: debugOp("ROR (0x66)"); opROR(); break;
-				case 0x76: debugOp("ROR (0x76)"); opROR(); break;
-				case 0x6e: debugOp("ROR (0x6e)"); opROR(); break;
-				case 0x7e: debugOp("ROR (0x7e)"); opROR(); break;
-				case 0x4c: debugOp("JMP (0x4c)"); opJMP(); break;
-				case 0x6c: debugOp("JMP (0x6c)"); opJMP(); break;
-				case 0x20: debugOp("JSR (0x20)"); opJSR(); break;
-				case 0x60: debugOp("RTS (0x60)"); opRTS(); break;
-				case 0x90: debugOp("BCC (0x90)"); opBCC(); break;
-				case 0xb0: debugOp("BCS (0xb0)"); opBCS(); break;
-				case 0xf0: debugOp("BEQ (0xf0)"); opBEQ(); break;
-				case 0x30: debugOp("BMI (0x30)"); opBMI(); break;
-				case 0xd0: debugOp("BNE (0xd0)"); opBNE(); break;
-				case 0x10: debugOp("BPL (0x10)"); opBPL(); break;
-				case 0x50: debugOp("BVC (0x50)"); opBVC(); break;
-				case 0x70: debugOp("BVS (0x70)"); opBVS(); break;
-				case 0x18: debugOp("CLC (0x18)"); opCLC(); break;
-				case 0xd8: debugOp("CLD (0xd8)"); opCLD(); break;
-				case 0x58: debugOp("CLI (0x58)"); opCLI(); break;
-				case 0xB8: debugOp("CLV (0xB8)"); opCLV(); break;
-				case 0x38: debugOp("SEC (0x38)"); opSEC(); break;
-				case 0xF8: debugOp("SED (0xF8)"); opSED(); break;
-				case 0x78: debugOp("SEI (0x78)"); opSEI(); break;
-				case 0x00: debugOp("BRK (0x00)"); opBRK(); break;
-				case 0xea: debugOp("NOP (0xea)"); opNOP(); break;
-				case 0x40: debugOp("RTI (0x40)"); opRTI(); break;
-				case 0x82: debugOp("NOPu (0x82)"); opNOPu(); break;
-				case 0x89: debugOp("NOPu (0x89)"); opNOPu(); break;
-				case 0xC2: debugOp("NOPu (0xC2)"); opNOPu(); break;
-				case 0xE2: debugOp("NOPu (0xE2)"); opNOPu(); break;
-				case 0x1a: debugOp("NOPu (0x1a)"); opNOPu(); break;
-				case 0x3a: debugOp("NOPu (0x3a)"); opNOPu(); break;
-				case 0x5a: debugOp("NOPu (0x5a)"); opNOPu(); break;
-				case 0x7a: debugOp("NOPu (0x7a)"); opNOPu(); break;
-				case 0xda: debugOp("NOPu (0xda)"); opNOPu(); break;
-				case 0xfa: debugOp("NOPu (0xfa)"); opNOPu(); break;
-				case 0x80: debugOp("NOPu (0x80)"); opNOPu(); break;
-				case 0x04: debugOp("NOPu (0x04)"); opNOPu(); break;
-				case 0x44: debugOp("NOPu (0x44)"); opNOPu(); break;
-				case 0x64: debugOp("NOPu (0x64)"); opNOPu(); break;
-				case 0x14: debugOp("NOPu (0x14)"); opNOPu(); break;
-				case 0x34: debugOp("NOPu (0x34)"); opNOPu(); break;
-				case 0x54: debugOp("NOPu (0x54)"); opNOPu(); break;
-				case 0x74: debugOp("NOPu (0x74)"); opNOPu(); break;
-				case 0xd4: debugOp("NOPu (0xd4)"); opNOPu(); break;
-				case 0xf4: debugOp("NOPu (0xf4)"); opNOPu(); break;
-				case 0x0c: debugOp("NOPu (0x0c)"); opNOPu(); break;
-				case 0x1c: debugOp("NOPu (0x1c)"); opNOPu(); break;
-				case 0x3c: debugOp("NOPu (0x3c)"); opNOPu(); break;
-				case 0x5c: debugOp("NOPu (0x5c)"); opNOPu(); break;
-				case 0x7c: debugOp("NOPu (0x7c)"); opNOPu(); break;
-				case 0xdc: debugOp("NOPu (0xdc)"); opNOPu(); break;
-				case 0xfc: debugOp("NOPu (0xfc)"); opNOPu(); break;
-				case 0xa7: debugOp("LAXu (0xa7)"); opLAXu(); break;
-				case 0xb7: debugOp("LAXu (0xb7)"); opLAXu(); break;
-				case 0xaf: debugOp("LAXu (0xaf)"); opLAXu(); break;
-				case 0xbf: debugOp("LAXu (0xbf)"); opLAXu(); break;
-				case 0xa3: debugOp("LAXu (0xa3)"); opLAXu(); break;
-				case 0xb3: debugOp("LAXu (0xb3)"); opLAXu(); break;
-				case 0x87: debugOp("ASXu (0x87)"); opASXu(); break;
-				case 0x97: debugOp("ASXu (0x97)"); opASXu(); break;
-				case 0x8F: debugOp("ASXu (0x8F)"); opASXu(); break;
-				case 0x83: debugOp("ASXu (0x83)"); opASXu(); break;
-				case 0xC7: debugOp("DCPu (0xC7)"); opDCPu(); break;
-				case 0xd7: debugOp("DCPu (0xd7)"); opDCPu(); break;
-				case 0xcf: debugOp("DCPu (0xcf)"); opDCPu(); break;
-				case 0xdf: debugOp("DCPu (0xdf)"); opDCPu(); break;
-				case 0xdb: debugOp("DCPu (0xdb)"); opDCPu(); break;
-				case 0xc3: debugOp("DCPu (0xc3)"); opDCPu(); break;
-				case 0xd3: debugOp("DCPu (0xd3)"); opDCPu(); break;
-				case 0xe7: debugOp("ISPu (0xe7)"); opISBu(); break;
-				case 0xf7: debugOp("ISPu (0xf7)"); opISBu(); break;
-				case 0xef: debugOp("ISPu (0xef)"); opISBu(); break;
-				case 0xff: debugOp("ISPu (0xff)"); opISBu(); break;
-				case 0xfb: debugOp("ISPu (0xfb)"); opISBu(); break;
-				case 0xe3: debugOp("ISPu (0xe3)"); opISBu(); break;
-				case 0xf3: debugOp("ISPu (0xf3)"); opISBu(); break;
-				case 0x07: debugOp("SLOu (0x07)"); opSLOu(); break;
-				case 0x17: debugOp("SLOu (0x17)"); opSLOu(); break;
-				case 0x0f: debugOp("SLOu (0x0f)"); opSLOu(); break;
-				case 0x1f: debugOp("SLOu (0x1f)"); opSLOu(); break;
-				case 0x1b: debugOp("SLOu (0x1b)"); opSLOu(); break;
-				case 0x03: debugOp("SLOu (0x03)"); opSLOu(); break;
-				case 0x13: debugOp("SLOu (0x13)"); opSLOu(); break;
-				case 0x27: debugOp("RLAu (0x27)"); opRLAu(); break;
-				case 0x37: debugOp("RLAu (0x37)"); opRLAu(); break;
-				case 0x2F: debugOp("RLAu (0x2F)"); opRLAu(); break;
-				case 0x3F: debugOp("RLAu (0x3F)"); opRLAu(); break;
-				case 0x3b: debugOp("RLAu (0x3b)"); opRLAu(); break;
-				case 0x23: debugOp("RLAu (0x23)"); opRLAu(); break;
-				case 0x33: debugOp("RLAu (0x33)"); opRLAu(); break;
-				case 0x47: debugOp("SREu (0x47)"); opSREu(); break;
-				case 0x57: debugOp("SREu (0x57)"); opSREu(); break;
-				case 0x4F: debugOp("SREu (0x4F)"); opSREu(); break;
-				case 0x5f: debugOp("SREu (0x5f)"); opSREu(); break;
-				case 0x5b: debugOp("SREu (0x5b)"); opSREu(); break;
-				case 0x43: debugOp("SREu (0x43)"); opSREu(); break;
-				case 0x53: debugOp("SREu (0x53)"); opSREu(); break;
-				case 0x67: debugOp("RRAu (0x67)"); opRRAu(); break;
-				case 0x77: debugOp("RRAu (0x77)"); opRRAu(); break;
-				case 0x6f: debugOp("RRAu (0x6f)"); opRRAu(); break;
-				case 0x7f: debugOp("RRAu (0x7f)"); opRRAu(); break;
-				case 0x7b: debugOp("RRAu (0x7b)"); opRRAu(); break;
-				case 0x63: debugOp("RRAu (0x63)"); opRRAu(); break;
-				case 0x73: debugOp("RRAu (0x73)"); opRRAu(); break;
+				case 0xa9: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xa5: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xb5: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xad: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xbd: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xb9: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xa1: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xb1: Debug.Instruction = "LDA"; opLDA(); break;
+				case 0xa2: Debug.Instruction = "LDX"; opLDX(); break;
+				case 0xa6: Debug.Instruction = "LDX"; opLDX(); break;
+				case 0xb6: Debug.Instruction = "LDX"; opLDX(); break;
+				case 0xae: Debug.Instruction = "LDX"; opLDX(); break;
+				case 0xbe: Debug.Instruction = "LDX"; opLDX(); break;
+				case 0xa0: Debug.Instruction = "LDY"; opLDY(); break;
+				case 0xa4: Debug.Instruction = "LDY"; opLDY(); break;
+				case 0xb4: Debug.Instruction = "LDY"; opLDY(); break;
+				case 0xac: Debug.Instruction = "LDY"; opLDY(); break;
+				case 0xbc: Debug.Instruction = "LDY"; opLDY(); break;
+				case 0x85: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x95: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x8d: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x9d: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x99: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x81: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x91: Debug.Instruction = "STA"; opSTA(); break;
+				case 0x86: Debug.Instruction = "STX"; opSTX(); break;
+				case 0x96: Debug.Instruction = "STX"; opSTX(); break;
+				case 0x8e: Debug.Instruction = "STX"; opSTX(); break;
+				case 0x84: Debug.Instruction = "STY"; opSTY(); break;
+				case 0x94: Debug.Instruction = "STY"; opSTY(); break;
+				case 0x8c: Debug.Instruction = "STY"; opSTY(); break;
+				case 0xaa: Debug.Instruction = "TAX"; opTAX(); break;
+				case 0xa8: Debug.Instruction = "TAY"; opTAY(); break;
+				case 0x8a: Debug.Instruction = "TXA"; opTXA(); break;
+				case 0x98: Debug.Instruction = "TYA"; opTYA(); break;
+				case 0xba: Debug.Instruction = "TSX"; opTSX(); break;
+				case 0x9a: Debug.Instruction = "TXS"; opTXS(); break;
+				case 0x48: Debug.Instruction = "PHA"; opPHA(); break;
+				case 0x08: Debug.Instruction = "PHP"; opPHP(); break;
+				case 0x68: Debug.Instruction = "PLA"; opPLA(); break;
+				case 0x28: Debug.Instruction = "PLP"; opPLP(); break;
+				case 0x29: Debug.Instruction = "AND"; opAND(); break;
+				case 0x25: Debug.Instruction = "AND"; opAND(); break;
+				case 0x35: Debug.Instruction = "AND"; opAND(); break;
+				case 0x2d: Debug.Instruction = "AND"; opAND(); break;
+				case 0x3d: Debug.Instruction = "AND"; opAND(); break;
+				case 0x39: Debug.Instruction = "AND"; opAND(); break;
+				case 0x21: Debug.Instruction = "AND"; opAND(); break;
+				case 0x31: Debug.Instruction = "AND"; opAND(); break;
+				case 0x49: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x45: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x55: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x4d: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x5d: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x59: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x41: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x51: Debug.Instruction = "EOR"; opEOR(); break;
+				case 0x09: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x05: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x15: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x0d: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x1d: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x19: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x01: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x11: Debug.Instruction = "ORA"; opORA(); break;
+				case 0x24: Debug.Instruction = "BIT"; opBIT(); break;
+				case 0x2c: Debug.Instruction = "BIT"; opBIT(); break;
+				case 0x69: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x65: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x75: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x6d: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x7d: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x79: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x61: Debug.Instruction = "ADC"; opADC(); break;
+				case 0x71: Debug.Instruction = "ADC"; opADC(); break;
+				case 0xe9: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xe5: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xf5: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xed: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xfd: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xf9: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xe1: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xf1: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xeb: Debug.Instruction = "SBC"; opSBC(); break;
+				case 0xc9: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xc5: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xd5: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xcd: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xdd: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xd9: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xc1: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xd1: Debug.Instruction = "CMP"; opCMP(); break;
+				case 0xe0: Debug.Instruction = "CPX"; opCPX(); break;
+				case 0xe4: Debug.Instruction = "CPX"; opCPX(); break;
+				case 0xec: Debug.Instruction = "CPX"; opCPX(); break;
+				case 0xc0: Debug.Instruction = "CPY"; opCPY(); break;
+				case 0xc4: Debug.Instruction = "CPY"; opCPY(); break;
+				case 0xcc: Debug.Instruction = "CPY"; opCPY(); break;
+				case 0xe6: Debug.Instruction = "INC"; opINC(); break;
+				case 0xf6: Debug.Instruction = "INC"; opINC(); break;
+				case 0xee: Debug.Instruction = "INC"; opINC(); break;
+				case 0xfe: Debug.Instruction = "INC"; opINC(); break;
+				case 0xe8: Debug.Instruction = "INX"; opINX(); break;
+				case 0xc8: Debug.Instruction = "INY"; opINY(); break;
+				case 0xc6: Debug.Instruction = "DEC"; opDEC(); break;
+				case 0xd6: Debug.Instruction = "DEC"; opDEC(); break;
+				case 0xce: Debug.Instruction = "DEC"; opDEC(); break;
+				case 0xde: Debug.Instruction = "DEC"; opDEC(); break;
+				case 0xca: Debug.Instruction = "DEX"; opDEX(); break;
+				case 0x88: Debug.Instruction = "DEY"; opDEY(); break;
+				case 0x0a: Debug.Instruction = "ASL"; opASL(); break;
+				case 0x06: Debug.Instruction = "ASL"; opASL(); break;
+				case 0x16: Debug.Instruction = "ASL"; opASL(); break;
+				case 0x0e: Debug.Instruction = "ASL"; opASL(); break;
+				case 0x1e: Debug.Instruction = "ASL"; opASL(); break;
+				case 0x4a: Debug.Instruction = "LSR"; opLSR(); break;
+				case 0x46: Debug.Instruction = "LSR"; opLSR(); break;
+				case 0x56: Debug.Instruction = "LSR"; opLSR(); break;
+				case 0x4e: Debug.Instruction = "LSR"; opLSR(); break;
+				case 0x5e: Debug.Instruction = "LSR"; opLSR(); break;
+				case 0x2a: Debug.Instruction = "ROL"; opROL(); break;
+				case 0x26: Debug.Instruction = "ROL"; opROL(); break;
+				case 0x36: Debug.Instruction = "ROL"; opROL(); break;
+				case 0x2e: Debug.Instruction = "ROL"; opROL(); break;
+				case 0x3e: Debug.Instruction = "ROL"; opROL(); break;
+				case 0x6a: Debug.Instruction = "ROR"; opROR(); break;
+				case 0x66: Debug.Instruction = "ROR"; opROR(); break;
+				case 0x76: Debug.Instruction = "ROR"; opROR(); break;
+				case 0x6e: Debug.Instruction = "ROR"; opROR(); break;
+				case 0x7e: Debug.Instruction = "ROR"; opROR(); break;
+				case 0x4c: Debug.Instruction = "JMP"; opJMP(); break;
+				case 0x6c: Debug.Instruction = "JMP"; opJMP(); break;
+				case 0x20: Debug.Instruction = "JSR"; opJSR(); break;
+				case 0x60: Debug.Instruction = "RTS"; opRTS(); break;
+				case 0x90: Debug.Instruction = "BCC"; opBCC(); break;
+				case 0xb0: Debug.Instruction = "BCS"; opBCS(); break;
+				case 0xf0: Debug.Instruction = "BEQ"; opBEQ(); break;
+				case 0x30: Debug.Instruction = "BMI"; opBMI(); break;
+				case 0xd0: Debug.Instruction = "BNE"; opBNE(); break;
+				case 0x10: Debug.Instruction = "BPL"; opBPL(); break;
+				case 0x50: Debug.Instruction = "BVC"; opBVC(); break;
+				case 0x70: Debug.Instruction = "BVS"; opBVS(); break;
+				case 0x18: Debug.Instruction = "CLC"; opCLC(); break;
+				case 0xd8: Debug.Instruction = "CLD"; opCLD(); break;
+				case 0x58: Debug.Instruction = "CLI"; opCLI(); break;
+				case 0xB8: Debug.Instruction = "CLV"; opCLV(); break;
+				case 0x38: Debug.Instruction = "SEC"; opSEC(); break;
+				case 0xF8: Debug.Instruction = "SED"; opSED(); break;
+				case 0x78: Debug.Instruction = "SEI"; opSEI(); break;
+				case 0x00: Debug.Instruction = "BRK"; opBRK(); break;
+				case 0xea: Debug.Instruction = "NOP"; opNOP(); break;
+				case 0x40: Debug.Instruction = "RTI"; opRTI(); break;
+				case 0x82: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x89: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xC2: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xE2: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x1a: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x3a: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x5a: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x7a: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xda: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xfa: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x80: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x04: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x44: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x64: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x14: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x34: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x54: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x74: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xd4: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xf4: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x0c: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x1c: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x3c: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x5c: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0x7c: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xdc: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xfc: Debug.Instruction = "NOPu"; opNOPu(); break;
+				case 0xa7: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0xb7: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0xaf: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0xbf: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0xa3: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0xb3: Debug.Instruction = "LAXu"; opLAXu(); break;
+				case 0x87: Debug.Instruction = "ASXu"; opASXu(); break;
+				case 0x97: Debug.Instruction = "ASXu"; opASXu(); break;
+				case 0x8F: Debug.Instruction = "ASXu"; opASXu(); break;
+				case 0x83: Debug.Instruction = "ASXu"; opASXu(); break;
+				case 0xC7: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xd7: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xcf: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xdf: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xdb: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xc3: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xd3: Debug.Instruction = "DCPu"; opDCPu(); break;
+				case 0xe7: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xf7: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xef: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xff: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xfb: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xe3: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0xf3: Debug.Instruction = "ISBu"; opISBu(); break;
+				case 0x07: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x17: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x0f: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x1f: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x1b: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x03: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x13: Debug.Instruction = "SLOu"; opSLOu(); break;
+				case 0x27: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x37: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x2F: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x3F: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x3b: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x23: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x33: Debug.Instruction = "RLAu"; opRLAu(); break;
+				case 0x47: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x57: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x4F: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x5f: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x5b: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x43: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x53: Debug.Instruction = "SREu"; opSREu(); break;
+				case 0x67: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x77: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x6f: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x7f: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x7b: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x63: Debug.Instruction = "RRAu"; opRRAu(); break;
+				case 0x73: Debug.Instruction = "RRAu"; opRRAu(); break;
 				default:
-					throw new ArgumentException(String.Format("Unknown opcode: {0:x}", CurrentOpCode));
+					throw new ArgumentException(String.Format("Unknown opcode: {0:X}", CurrentOpCode));
 			}
-			debugOpRegs();
+
+			// Check we were given a length
+			if (CurrentOpCodeLength == 0)
+					throw new Exception("0 length opcode: " + Debug.Instruction);
+					
+					
+			// Get the opcode and params for debug
+			byte[] bytes = new byte[CurrentOpCodeLength];
+			for (int i = 0; i < CurrentOpCodeLength; i++)
+				bytes[i] = Engine.ReadMemory8((ushort)(PC+i));
+			Debug.OpCodes = bytes;
 			
-			// Check we were given a length unless it's a jmp/branch etc.
+			// Update PC unless JMP etc.
 			if (!ChangedPC)
-			{
-				if (CurrentOpCodeLength == 0)
-					throw new Exception();
-				else
-					PC += (ushort)CurrentOpCodeLength;
-			}
-			
+				PC += (ushort)CurrentOpCodeLength;
+
 			// Check cycles were updated
 			if (Cycles == 0)
-				throw new Exception();
+				throw new Exception("No cycles reported");
 			
-			if (debugLatch == true)
-				Console.WriteLine("");
-			
+			Debug.EndLine();
 			return Cycles;
 		}
 		
 		#region Helper Functions
-		
-		private bool debugLatch = false;
-		private void debugOp(string op)
-		{
-
-				
-			Console.Write("{0:x}\t\t {1} ", PC, op);
-			debugLatch = true;
-		}
-		private void debugOpRegs()
-		{
-			Console.WriteLine("\t\t A:{0:x} P:{1:x}", A, Flags.Byte);
-			debugLatch = false;
-		}
-		
-		
-		
-		public void debugOpMem(string mem, params object[] format)
-		{
-			//Console.Write(String.Format(mem, format));
-			
-		}
 		
 		private void getValues(out byte val1, out byte val2)
 		{
@@ -373,47 +369,58 @@ namespace NES
 		
 		public byte ZeroPage(byte addr)
 		{
-			CurrentOpCodeLength = 2;
-			debugOpMem("ZeroPage({0})={1}", addr, Engine.ReadMemory8((ushort)addr));
-			return Engine.ReadMemory8((ushort)addr);
+			byte val = Engine.ReadMemory8((ushort)addr);
+			Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", addr, val);
+
+			CurrentOpCodeLength = 2;			
+			return val;
 		}
 		public byte ZeroPageX(byte addr)
 		{
-			debugOpMem("ZeroPageX({0}, {1})={2}", addr, X, Engine.ReadMemory8((ushort)addr));
-			addr += X;
+			byte addr2 = (byte)(addr + X);
+			byte val = Engine.ReadMemory8((ushort)addr2);
+			Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", addr, addr2, val);
+			
 			CurrentOpCodeLength = 2;
-			return Engine.ReadMemory8((ushort)addr);
+			return val;
 		}
 		public byte ZeroPageY(byte addr)
 		{
-			debugOpMem("ZeroPageY({0}, {1})={2}", addr, Y, Engine.ReadMemory8((ushort)addr));
-			addr += Y;
+			byte addr2 = (byte)(addr + Y);
+			byte val = Engine.ReadMemory8((ushort)addr2);
+			Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", addr, addr2, val);
+			
 			CurrentOpCodeLength = 2;
-			return Engine.ReadMemory8((ushort)addr);
+			return val;
 		}
 		
 		public byte Absolute(byte lower, byte upper)
 		{
+			byte val = Engine.ReadMemory8(sortEndian(lower, upper));
+			Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", sortEndian(lower, upper), val);
+		
 			CurrentOpCodeLength = 3;
-			debugOpMem("Absolute({0})={1}", sortEndian(lower, upper), Engine.ReadMemory8(sortEndian(lower, upper)));
-			return Engine.ReadMemory8(sortEndian(lower, upper));
+			return val;
 		}	
 		public byte AbsoluteX(byte lower, byte upper)
 		{
+			byte val = Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + X));
+			Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + X, val);
+		
 			CurrentOpCodeLength = 3;
-			debugOpMem("AbsoluteX({0:x},{2:x})={1:x}", sortEndian(lower, upper), Engine.ReadMemory8(sortEndian(lower, upper)), X);
-			return Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + X));
+			return val;
 		}
 		public byte AbsoluteY(byte lower, byte upper)
 		{
+			byte val = Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + Y));
+			Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + Y, val);
+			
 			CurrentOpCodeLength = 3;
-			debugOpMem("AbsoluteY({0:x},{2:x})={1:x}", sortEndian(lower, upper), Engine.ReadMemory8(sortEndian(lower, upper)), Y);
-			return Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + Y));
+			return val;
 		}
 		
 		public ushort Indirect(byte lower, byte upper)
 		{
-			debugOpMem("Indirect");
 			CurrentOpCodeLength = 3;
 			
 			// Page-boundary bug [Yes, this is me IMPLEMENTING a bug, lolz, silly 6502]
@@ -422,29 +429,28 @@ namespace NES
 				addr = sortEndian(Engine.ReadMemory8(sortEndian(lower, upper)), Engine.ReadMemory8(sortEndian(0, upper)));
 			else
 				addr = Engine.ReadMemory16(sortEndian(lower, upper));
+			
+			Debug.AddressingMode = String.Format("({0}{1:X}) = {2:X}", "$", sortEndian(lower, upper), addr);
 		
 			return addr;
 		}
 		public byte IndirectX(byte addr)
 		{
-		//	debugOpMem("IndirectX");
 			addr += X;
 			CurrentOpCodeLength = 2;
 			byte addr2 = (byte)(addr + 1); // for second byte (wraps round $FF -> $00 for page-boundary bug)		
 			ushort actualAddr = sortEndian(Engine.ReadMemory8((ushort)addr), Engine.ReadMemory8((ushort)addr2));
 			byte val = Engine.ReadMemory8(actualAddr);
-			debugOpMem("({0:x},X) = {1:x} = {2:x} = {3:x}", addr-X, addr, actualAddr, val);
+			Debug.AddressingMode = String.Format("({0:X},X) = {1:X} = {2:X} = {3:X}", addr-X, addr, actualAddr, val);
 			return val;
 		}
 		public byte IndirectY(byte addr)
 		{
-			//Console.WriteLine("Warning: using IndirectY Addressing, this implementation could be wrong. Do we wrap on the Least Sig Byte?");
-
 			byte lower = Engine.ReadMemory8(addr);
 			byte upper = Engine.ReadMemory8((byte)(addr+1)); // page bug!
 			ushort addr2 = sortEndian(lower, upper);
 			byte val = Engine.ReadMemory8((ushort)(addr2 + Y));
-			debugOpMem("({0:x}),Y = {1:x} @ {2:x} = {3:x}", addr, addr2, addr2 + Y, val);
+			Debug.AddressingMode = String.Format("({0:X}),Y = {1:X} @ {2:X} = {3:X}", addr, addr2, addr2 + Y, val);
 			CurrentOpCodeLength = 2;
 			return val;	
 		}
@@ -634,7 +640,8 @@ namespace NES
 				default:
 					throw new NotImplementedException();
 			}
-			
+
+			Debug.AddressingMode = String.Format("{0}{1:X} (= {2:X}) (ST)", "$", addr, A);
 			Engine.WriteMemory8(addr, A);
 		}
 		private void opSTX()
@@ -666,6 +673,7 @@ namespace NES
 					throw new NotImplementedException();
 			}
 			
+			Debug.AddressingMode = String.Format("{0}{1:X} (= {2:X}) (ST)", "$", addr, X);
 			Engine.WriteMemory8(addr, X);
 		}
 		private void opSTY()
@@ -697,6 +705,7 @@ namespace NES
 					throw new NotImplementedException();
 			}
 			
+			Debug.AddressingMode = String.Format("{0}{1:X} (= {2:X}) (ST)", "$", addr, Y);
 			Engine.WriteMemory8(addr, Y);
 		}
 		
@@ -1204,6 +1213,7 @@ namespace NES
 					throw new NotImplementedException();
 			}
 			
+			Debug.AddressingMode += String.Format("(= {0:X2}) (ST)", (byte)(val+1));
 			Engine.WriteMemory8(addr, (byte)(val + 1));
 			setZeroNegFlags((byte)(val + 1));
 		}
@@ -1255,6 +1265,7 @@ namespace NES
 					throw new NotImplementedException();
 			}
 			
+			Debug.AddressingMode += String.Format("(= {0:X2}) (ST)", (byte)(val-1));
 			Engine.WriteMemory8(addr, (byte)(val - 1));
 			setZeroNegFlags((byte)(val - 1));
 		}
@@ -1494,9 +1505,9 @@ namespace NES
 				default:
 					throw new NotImplementedException();
 			}
-			
-			CurrentOpCodeLength = 0; // It'll mess up the PC! ):
-			ChangedPC = true; // So it doesn't complain CurrentOpCodeLength is 0
+
+			CurrentOpCodeLength = 3;
+			ChangedPC = true; // So it doesn't change PC
 			PC = addr;
 		}
 		private void opJSR()
@@ -1509,8 +1520,8 @@ namespace NES
 			
 			// Go to the address
 			Cycles += 6;
-			CurrentOpCodeLength = 0; // It'll mess up the PC! ):
-			ChangedPC = true; // So it doesn't complain CurrentOpCodeLength is 0
+			CurrentOpCodeLength = 3;
+			ChangedPC = true; // So it doesn't change PC
 			PC = sortEndian(val1, val2);
 		}
 		private void opRTS()
@@ -1609,9 +1620,9 @@ namespace NES
 	 		
 	 		// Handle interrupt
 	 		Flags.Break = true;
+	 		CurrentOpCodeLength = 1;
 	 		PC = Engine.ReadMemory16(0xFFFE);
-	 		CurrentOpCodeLength = 0;
-	 		ChangedPC = true; // So it doesn't bug us about CurrentOpCodeLength being 0.
+	 		ChangedPC = true; 
 	 		Cycles += 7;
 	 	}
 	 	private void opNOP()
@@ -1626,7 +1637,7 @@ namespace NES
 	 		Flags.Byte = Stack.Pop8();
 	 		PC = Stack.Pop16();
 	 	
-	 		CurrentOpCodeLength = 0;
+	 		CurrentOpCodeLength = 1;
 	 		ChangedPC = true; // So it doesn't bug us about CurrentOpCodeLength being 0.
 	 		Cycles += 6;	
 	 	}

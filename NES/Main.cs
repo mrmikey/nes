@@ -8,7 +8,7 @@ namespace NES
 	
 		public static void Main(string[] args)
 		{
-			Engine e = new Engine("Donkey Kong.nes");
+			Engine e = new Engine("Balloon Fight.nes");
 			e.Run();
 			//Graphics g = new Graphics(256, 240);
 			//Console.Read();

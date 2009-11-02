@@ -26,7 +26,19 @@ namespace NES
 	
 		// $2005 - VRAM Address 1 - Scroll Register (Write)
 		private bool writeLatch = true; // used for 1st/2nd writes to VRAMAddr1/VRAMAddr2
-		public ushort Loopy_T = 0x2000, Loopy_V = 0x2000;
+		public ushort Loopy_T = 0x2000;
+		private ushort loopy_v = 0x2000;
+		public ushort Loopy_V
+		{
+			get 
+			{
+				return loopy_v;
+			}
+			set
+			{
+				loopy_v = value;
+			}
+		}
 		public byte Loopy_X;
 		public byte VramAddrReg1
 		{
@@ -129,7 +141,7 @@ namespace NES
 		}
 		public byte BGTable // Bit 4, the Pattern Table BG is stored in [returns 0 or 0x1]
 		{
-			get { return (byte)((Control1 & 32) >> 5); }
+			get { return (byte)((Control1 & 16) >> 4); }
 		}
 		
 		public PPUFlags()

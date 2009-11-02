@@ -30,7 +30,9 @@ namespace NES
 					throw new ArgumentException();
 					break;
 				case 0x2002: // PPU Status
-					return PPUFlags.Status;
+					byte status = PPUFlags.Status;
+					PPUFlags.OnStatusRead();
+					return status;
 					break;
 				case 0x2003: // SPR-RAM Address
 					throw new ArgumentException();
@@ -51,7 +53,7 @@ namespace NES
 					throw new ArgumentException();
 					break;
 				case 0x4016: // Joypad 1
-					return Engine.Joypads.Read(0);
+					return (byte)(Engine.Joypads.Read(0) | Engine.APU.Register4016);
 				case 0x4017: // Joypad 2
 					return Engine.Joypads.Read(1);
 				default:
@@ -100,6 +102,7 @@ namespace NES
 					break;
 				case 0x4017: // Joypad 2
 					Engine.Joypads.Write(1, val);
+					Engine.APU.Register4017 = val;
 					break;
 				//default:
 				//default:

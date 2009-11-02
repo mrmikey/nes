@@ -9,6 +9,7 @@ namespace NES
 	
 		public CPU CPU;
 		public PPU PPU;
+		public APU APU;
 		public Cartridge Cartridge;
 		public IORegisters IORegisters;
 		public Joypads Joypads;
@@ -19,11 +20,13 @@ namespace NES
 		{
 			CPU = new CPU(this);
 			PPU = new PPU(this);
+			APU = new APU(this);
 			IORegisters = new IORegisters(this, PPU);
 			Joypads = new Joypads();
-				
+			
 			loadiNes(filename);
 			Graphics = new Graphics(this, 256,240);
+			Joypads.Initialise();
 		}
 		
 		private void loadiNes(string filename)
@@ -75,7 +78,11 @@ namespace NES
 			}
 			
 			// Load CHR-ROM
-			Cartridge.LoadCHR(fs);
+			for (int i = 0; i < numCHR; i++)
+			{
+				Cartridge.CHRBanks[i] = new byte[Cartridge.CHRLength];
+				fs.Read(Cartridge.CHRBanks[i], 0, Cartridge.CHRLength);
+			}
 			
 		}
 		
@@ -87,6 +94,7 @@ namespace NES
 				// Accuracy can be up to 6/7 cycles out if they access Registers! HM. Todo
 				int cpuCycles = CPU.Run();
 				PPU.Run(cpuCycles);
+				APU.Run(cpuCycles);
 			}
 			
 			Graphics.Deinitialise();

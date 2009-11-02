@@ -58,6 +58,8 @@
     <Compile Include="Nametables.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Tracelogger.cs" />
+    <Compile Include="APU.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

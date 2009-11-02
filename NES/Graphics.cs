@@ -19,7 +19,7 @@ namespace NES
 		private bool NPOTAllowed;
 		private int debugCount;
 		private Color backgroundColor = Color.Black;
-		public int[] Screen, ScreenBuffer;
+		public int[] ScreenBuffer;
 		public int TexturePointer; // ptr to our screen texture
 		public Color[] TempPalette = new Color[] { Color.Red, Color.Green, Color.Blue, Color.White };
 
@@ -28,14 +28,14 @@ namespace NES
 			Engine = engine;
 			Width = width;
 			Height = height;
-			Screen = new int[Width * Height];
+			//Screen = new int[Width * Height];
 			ScreenBuffer = new int[Width*Height];
 			// Debug
 			/*int offset = width * (height/2);
 			for (int x = 0; x < width; x++)
 				Screen[offset + x] = Color.Blue.ToArgb();*/
 		
-			Initialise(2);
+			Initialise(1);
 
 			Render();
 		}		
@@ -126,7 +126,8 @@ namespace NES
         		{
         			byte lower = (byte)((scanLower >> (7 ^ x)) & 1);
         			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 1);
-        			int color = Engine.PPU.Palette[lower | upper | attribute];
+        			int palIndex = lower | upper | attribute;
+        			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
         			Color c = Color.FromArgb((color & 0xFF0000) >> 16, (color & 0xFF00) >> 8, color & 0xFF);
         			DrawPixel(x + (X), y + (Y), c);
         		}
@@ -138,31 +139,29 @@ namespace NES
         	ScreenBuffer[(y*Width)+x] = color.ToArgb();
         }
         
-        public void SwapBuffer()
-        {
-        	ScreenBuffer.CopyTo(Screen, 0);
-        }
+        private DateTime lastRender;
         
         public void Render()
         {
             DateTime dtStart = DateTime.Now;
-		
-		
+			Console.WriteLine("{0} milliseconds since last render.", (DateTime.Now - lastRender).TotalMilliseconds);
+			lastRender = dtStart;
+			
+			Console.WriteLine(String.Format("{0:x} {1:x}", Engine.ReadMemory8(0x00), Engine.ReadMemory8(0x44)));
 			// Draw tile table 1
-			int count = 0; 
+			/*int count = 0; 
 			for (int y = 0; y < 16; y++)
 				for (int x = 0; x < 16; x++)
 					DrawTile(Engine.Cartridge.CHRBanks[0], count++, x*8, y*8, 0);
 					//DrawTileFromCache(Engine.PPU.CHRCache, count++, x, y, 0);
 			
 			// Draw tile table 2
-			count = 0; 
 			for (int y = 0; y < 16; y++)
 				for (int x = 0; x < 16; x++)
-					DrawTile(Engine.Cartridge.CHRBanks[1], count++, 128 + (x*8), (y*8), 0);
+					DrawTile(Engine.Cartridge.CHRBanks[0], count++, 128 + (x*8), (y*8), 0);
 					//DrawTileFromCache(Engine.PPU.CHRCache, count++, x, y, 0);		
-		
-			SwapBuffer();
+			*/
+		//	SwapBuffer();
 			
             // Gl blah blah
             lock (RenderLockBlob)
@@ -268,7 +267,7 @@ namespace NES
 	        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST); // PIXELS!
 	
 	        // Actually upload the data.
-	        fixed (int* ptrScreen = Screen)
+	        fixed (int* ptrScreen = ScreenBuffer)
 		    {
 		    	Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, Width, Height, 0, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, new IntPtr((void*)ptrScreen));
        	    }

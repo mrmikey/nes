@@ -12,12 +12,10 @@ namespace NES
 		}	
 		public byte this[int addr]
 		{
-			get { Console.WriteLine("{0:x}", addr); return logicalNametables[(addr & 0xC00) >> 10][addr & 0x3FF]; }
+			get { return logicalNametables[(addr & 0xC00) >> 10][addr & 0x3FF]; }
 			set 
 			{ 
 			logicalNametables[(addr & 0xC00) >> 10][addr & 0x3FF] = value; 
-			if (value > 0)
-				Console.ReadKey();
 			}
 		}
 		

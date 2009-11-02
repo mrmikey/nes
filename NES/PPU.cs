@@ -17,7 +17,7 @@ namespace NES
 		public int Cycle = 0;
 		public float CycleCarry = 0;
 		public int VBlankTime = 70; // Number of Scanlines we're in VBlank for [PAL; NTSC is 20]
-		public int CurrentScaline = 0; // Pre-draw
+		public int CurrentScaline = -1; // Pre-draw
 		public int VBlankAt = 240; // Scanline to start VBlank at
 		public int EndScanline = 900; // PAL... hardcode for now, should use VBlankTime todo
 		
@@ -104,6 +104,9 @@ namespace NES
 			// Timing!
 			for (int i = 0; i < ppuCycles; ++i)
 			{
+			//	if ((Cycle == 0) && (CurrentScaline == 0))
+			//		Flags.Loopy_V = (ushort)(0x2000 | (Flags.NameTableAddress << 10));
+			
 				++Cycle;
 				if (Cycle == 256) // Significance?
 				{
@@ -126,7 +129,7 @@ namespace NES
 					// Start of VBlank (240 is idle)
 					if (CurrentScaline == 241)
 					{
-						dumpNametable();
+						//dumpNametable();
 						Engine.Graphics.Render();
 						Flags.Status |= 0x80; // Set VBlank flag in $2002
 						Engine.CPU.NMI = ((Flags.Control1 & 0x80) > 1) ? true : false; // Only trigger NMI if they want us to in $2000
@@ -134,7 +137,7 @@ namespace NES
 						Engine.CPU.Flags.InterruptDisable = true; // Set NMI
 					} else if (CurrentScaline == EndScanline)
 					{
-						CurrentScaline = 0;
+						CurrentScaline = -1;
 						// todo: this.Rendering, and short scanlines
 					}
 				} else if ((CurrentScaline < 0) && (Cycle == 1))
@@ -144,7 +147,7 @@ namespace NES
 				}
 				
 				// :D
-				if (CurrentScaline < 240)
+				if ((CurrentScaline < 240) && (CurrentScaline > 0))
 				{
 					// Datas! 
 					switch(Cycle)
@@ -172,7 +175,7 @@ namespace NES
 							// Find out which pattern to use
 							byte tile = Nametables[Flags.Loopy_V];
 	
-							int pattern_addr = (tile << 5) | (Flags.BGTable << 14) | (7 << 8);
+							int pattern_addr = (tile << 6) | (Flags.BGTable << 14);
 							
 							// Get attribute
 							int attribute_addr = 0x23C0 | (Flags.Loopy_V & 0xC00) | (AttributeLocationTable[Flags.Loopy_V & 0x3FF]);
@@ -183,7 +186,7 @@ namespace NES
 							int x = Flags.Loopy_V & 31; // bits 0-4 are x-scroll
 							int y = (Flags.Loopy_V & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 							y = (y > 29) ? 29 : y;
-					//		Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+							Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 							
 							
 							break;

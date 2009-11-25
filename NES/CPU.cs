@@ -16,6 +16,7 @@ namespace NES
 		public bool NMI = false;
 		public bool IRQ = false;
 		public Tracelogger Debug = new Tracelogger("trace.txt");
+		public int SinceLastVBlank = 0;
 		
 		public CPU(Engine engine)
 		{
@@ -55,9 +56,9 @@ namespace NES
 			}
 			
 			// Debug
-			Debug.StartLine();
-			Debug.SetRegisters(A, X, Y, Flags);
-			Debug.PC = PC;
+			//Debug.StartLine();
+			//Debug.SetRegisters(A, X, Y, Flags);
+			//Debug.PC = PC;
 			
 			// Call relevant instruction
 			CurrentOpCode = Engine.ReadMemory8(PC);
@@ -299,25 +300,27 @@ namespace NES
 			}
 
 			// Check we were given a length
-			if (CurrentOpCodeLength == 0)
-					throw new Exception("0 length opcode: " + Debug.Instruction);
+			//if (CurrentOpCodeLength == 0)
+			//		throw new Exception("0 length opcode: " + Debug.Instruction);
 					
 					
 			// Get the opcode and params for debug
-			byte[] bytes = new byte[CurrentOpCodeLength];
+			/*byte[] bytes = new byte[CurrentOpCodeLength];
 			for (int i = 0; i < CurrentOpCodeLength; i++)
 				bytes[i] = Engine.ReadMemory8((ushort)(PC+i));
-			Debug.OpCodes = bytes;
+			Debug.OpCodes = bytes;*/
 			
 			// Update PC unless JMP etc.
 			if (!ChangedPC)
 				PC += (ushort)CurrentOpCodeLength;
 
 			// Check cycles were updated
-			if (Cycles == 0)
-				throw new Exception("No cycles reported");
+			//if (Cycles == 0)
+			//	throw new Exception("No cycles reported");
 			
-			Debug.EndLine();
+			
+			SinceLastVBlank += Cycles;
+			//Debug.EndLine();
 			return Cycles;
 		}
 		
@@ -370,7 +373,7 @@ namespace NES
 		public byte ZeroPage(byte addr)
 		{
 			byte val = Engine.ReadMemory8((ushort)addr);
-			Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", addr, val);
+			//Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", addr, val);
 
 			CurrentOpCodeLength = 2;			
 			return val;
@@ -379,7 +382,7 @@ namespace NES
 		{
 			byte addr2 = (byte)(addr + X);
 			byte val = Engine.ReadMemory8((ushort)addr2);
-			Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", addr, addr2, val);
+			//Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", addr, addr2, val);
 			
 			CurrentOpCodeLength = 2;
 			return val;
@@ -388,7 +391,7 @@ namespace NES
 		{
 			byte addr2 = (byte)(addr + Y);
 			byte val = Engine.ReadMemory8((ushort)addr2);
-			Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", addr, addr2, val);
+			//Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", addr, addr2, val);
 			
 			CurrentOpCodeLength = 2;
 			return val;
@@ -397,7 +400,7 @@ namespace NES
 		public byte Absolute(byte lower, byte upper)
 		{
 			byte val = Engine.ReadMemory8(sortEndian(lower, upper));
-			Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", sortEndian(lower, upper), val);
+			//Debug.AddressingMode = String.Format("{0}{1:X} = {2:X}", "$", sortEndian(lower, upper), val);
 		
 			CurrentOpCodeLength = 3;
 			return val;
@@ -405,7 +408,7 @@ namespace NES
 		public byte AbsoluteX(byte lower, byte upper)
 		{
 			byte val = Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + X));
-			Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + X, val);
+			//Debug.AddressingMode = String.Format("{0}{1:X}, X @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + X, val);
 		
 			CurrentOpCodeLength = 3;
 			return val;
@@ -413,7 +416,7 @@ namespace NES
 		public byte AbsoluteY(byte lower, byte upper)
 		{
 			byte val = Engine.ReadMemory8((ushort)(sortEndian(lower, upper) + Y));
-			Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + Y, val);
+			//Debug.AddressingMode = String.Format("{0}{1:X}, Y @ {2:X} = {3:X}", "$", sortEndian(lower, upper), sortEndian(lower, upper) + Y, val);
 			
 			CurrentOpCodeLength = 3;
 			return val;
@@ -430,7 +433,7 @@ namespace NES
 			else
 				addr = Engine.ReadMemory16(sortEndian(lower, upper));
 			
-			Debug.AddressingMode = String.Format("({0}{1:X}) = {2:X}", "$", sortEndian(lower, upper), addr);
+			//Debug.AddressingMode = String.Format("({0}{1:X}) = {2:X}", "$", sortEndian(lower, upper), addr);
 		
 			return addr;
 		}
@@ -441,7 +444,7 @@ namespace NES
 			byte addr2 = (byte)(addr + 1); // for second byte (wraps round $FF -> $00 for page-boundary bug)		
 			ushort actualAddr = sortEndian(Engine.ReadMemory8((ushort)addr), Engine.ReadMemory8((ushort)addr2));
 			byte val = Engine.ReadMemory8(actualAddr);
-			Debug.AddressingMode = String.Format("({0:X},X) = {1:X} = {2:X} = {3:X}", addr-X, addr, actualAddr, val);
+			//Debug.AddressingMode = String.Format("({0:X},X) = {1:X} = {2:X} = {3:X}", addr-X, addr, actualAddr, val);
 			return val;
 		}
 		public byte IndirectY(byte addr)
@@ -450,7 +453,7 @@ namespace NES
 			byte upper = Engine.ReadMemory8((byte)(addr+1)); // page bug!
 			ushort addr2 = sortEndian(lower, upper);
 			byte val = Engine.ReadMemory8((ushort)(addr2 + Y));
-			Debug.AddressingMode = String.Format("({0:X}),Y = {1:X} @ {2:X} = {3:X}", addr, addr2, addr2 + Y, val);
+			//Debug.AddressingMode = String.Format("({0:X}),Y = {1:X} @ {2:X} = {3:X}", addr, addr2, addr2 + Y, val);
 			CurrentOpCodeLength = 2;
 			return val;	
 		}

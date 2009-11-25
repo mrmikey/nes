@@ -99,7 +99,7 @@ namespace NES
 					Loopy_T &= 0x7F00;
 					Loopy_T |= value;
 					Loopy_V = Loopy_T;
-					Console.WriteLine("WRITE: {0:x}", Loopy_T);
+					//Console.WriteLine("WRITE: {0:x}", Loopy_T);
 				}
 			
 				writeLatch = !writeLatch;
@@ -129,6 +129,10 @@ namespace NES
 		// Control 1
 		public bool RenderBackground = false;
 		public bool RenderSprites = false;
+		public bool TallSprites 
+		{	
+			get { return ((Control1 & 32) > 0); }
+		}
 		public byte NameTableAddress // Bits 0-1, Name Table Address
 		{
 			get { return (byte)(Control1 & 3); }
@@ -142,6 +146,10 @@ namespace NES
 		public byte BGTable // Bit 4, the Pattern Table BG is stored in [returns 0 or 0x1]
 		{
 			get { return (byte)((Control1 & 16) >> 4); }
+		}
+		public byte SprTable
+		{
+			get { return (byte)((Control1 & 4) >> 3); }
 		}
 		
 		public PPUFlags()

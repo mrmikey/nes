@@ -20,7 +20,15 @@ namespace NES
 		private int debugCount;
 		private Color backgroundColor = Color.Black;
 		public int[] ScreenBuffer;
-		public int TexturePointer; // ptr to our screen texture
+		
+		public int[] BGBuffer;
+		public int BGPointer;
+		public int[] SprHighBuffer;
+		public int SprHighPointer;
+		public int[] SprLowBuffer;
+		public int SprLowPointer;
+		
+		//public int TexturePointer; // ptr to our screen texture
 		public Color[] TempPalette = new Color[] { Color.Red, Color.Green, Color.Blue, Color.White };
 
 		public Graphics(Engine engine, int width, int height)
@@ -29,7 +37,9 @@ namespace NES
 			Width = width;
 			Height = height;
 			//Screen = new int[Width * Height];
-			ScreenBuffer = new int[Width*Height];
+			BGBuffer =  new int[(Width)*(Height)];
+			SprHighBuffer = new int[(Width)*(Height)];
+			SprLowBuffer = new int[(Width)*(Height)];
 			// Debug
 			/*int offset = width * (height/2);
 			for (int x = 0; x < width; x++)
@@ -101,21 +111,7 @@ namespace NES
             Glfw.glfwTerminate();
         }
         
-        public void DrawTileFromCache(byte[] src, int tileNo, int X, int Y, int attribute)
-        {
-        	int count = tileNo * 64; // each tile is 64bytes
-        	for (int x = 0; x < 8; x++)
-        		for (int y = 0; y < 8; y++)
-        		{
-        			int palIndex = src[count] | attribute;
-        			int color = Engine.PPU.Palette[palIndex];
-        			Color c =  Color.FromArgb((color & 0xFF0000) >> 16, (color & 0xFF00) >> 8, color & 0xFF);
-        			DrawPixel(x + (X*8), y + (Y*8), c);
-        			count++;
-        		}
-        }
-        
-        public void DrawTile(byte[] bank, int tileNo, int X, int Y, int attribute)
+        public void DrawTile(byte[] bank, int[] buffer, int tileNo, int X, int Y, int attribute)
         {
         	int offset = tileNo * 16;
         	for (int y = 0; y < 8; y++)
@@ -128,26 +124,31 @@ namespace NES
         			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 1);
         			int palIndex = lower | upper | attribute;
         			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
-        			Color c = Color.FromArgb((color & 0xFF0000) >> 16, (color & 0xFF00) >> 8, color & 0xFF);
-        			DrawPixel(x + (X), y + (Y), c);
+	        		
+	        		// Can draw outside range
+	        		try
+	        		{
+	        			buffer[((y+Y)*Width)+(x+X)] = ((lower|upper) == 0) ? 0 : (int)(color|0xFF000000);
+	        		}
+	        		catch (IndexOutOfRangeException e)
+	        		{
+	        			Log.w("Ignoring drawing done out of bounds.");
+	        		}
         		}
         	}
+
         }
         
-        public void DrawPixel(int x, int y, Color color)
-        {
-        	ScreenBuffer[(y*Width)+x] = color.ToArgb();
-        }
         
         private DateTime lastRender;
         
         public void Render()
         {
             DateTime dtStart = DateTime.Now;
-			Console.WriteLine("{0} milliseconds since last render.", (DateTime.Now - lastRender).TotalMilliseconds);
+			//Console.WriteLine("{0} milliseconds since last render.", (DateTime.Now - lastRender).TotalMilliseconds);
 			lastRender = dtStart;
 			
-			Console.WriteLine(String.Format("{0:x} {1:x}", Engine.ReadMemory8(0x00), Engine.ReadMemory8(0x44)));
+		//	Console.WriteLine(String.Format("{0:x} {1:x}", Engine.ReadMemory8(0x00), Engine.ReadMemory8(0x44)));
 			// Draw tile table 1
 			/*int count = 0; 
 			for (int y = 0; y < 16; y++)
@@ -193,8 +194,12 @@ namespace NES
                 Gl.glRotatef(0f, 0f, 0f, 1f);
 
                 // DO RENDER HERE :)
-				sortTexture();
-				renderScreen();
+				sortTexture(ref SprLowBuffer, ref SprLowPointer);
+				sortTexture(ref BGBuffer, ref BGPointer);
+				sortTexture(ref SprHighBuffer, ref SprHighPointer);
+				renderScreen(SprLowPointer);
+				renderScreen(BGPointer);
+				renderScreen(SprHighPointer);
 				
 				// Finished, swap buffers
                 Glfw.glfwSwapBuffers();
@@ -202,16 +207,12 @@ namespace NES
 
 				// Debug
                 DateTime dtEnd = DateTime.Now;
-                debugCount++; // How often we write the time
-                if (debugCount >= 360)
-                {
-                    debugCount = 0;
-                    Log.i((dtEnd - dtStart).TotalMilliseconds.ToString() + "ms to render");
-                }
+                 //   Console.WriteLine((dtEnd - dtStart).TotalMilliseconds.ToString() + "ms to render");
             }
         }
                 
-        private void renderScreen()
+        // function that renders each screen, sprlow, bg, sprhigh
+        private void renderScreen(int pointer)
         {
 	        // save state...
 	        Gl.glPushMatrix();
@@ -222,7 +223,7 @@ namespace NES
 	        Gl.glRotatef(0f, 0f, 0f, 1f);
 	
 			// Setups!
-	        Gl.glBindTexture(Gl.GL_TEXTURE_2D, TexturePointer);
+	        Gl.glBindTexture(Gl.GL_TEXTURE_2D, pointer);
 	        Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE);
 	
 	        // remember chaps, culling order is clockwise.
@@ -246,31 +247,32 @@ namespace NES
 	        Gl.glPopMatrix();
         }
         
-        private unsafe void sortTexture()
+        private unsafe void sortTexture(ref int[] buffer, ref int pointer)
         {
             Gl.glEnable(Gl.GL_TEXTURE_2D);
 			
 			// Delete the old one!
-			Gl.glDeleteTextures(1, ref TexturePointer);
-			TexturePointer = -1;
+			Gl.glDeleteTextures(1, ref pointer);
+			pointer = -1;
 			
 			// Try making a texture
-            Gl.glGenTextures(1, out TexturePointer);
-            if (TexturePointer == 0)
+            Gl.glGenTextures(1, out pointer);
+            if (pointer == 0)
                 throw new Exception("The OpenGL context failed to create a new texture.");
 
 			// Setup some Gl shizzle.
-	        Gl.glBindTexture(Gl.GL_TEXTURE_2D, TexturePointer);
+	        Gl.glBindTexture(Gl.GL_TEXTURE_2D, pointer);
 	        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
 	        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
 	        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST); // THE
 	        Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST); // PIXELS!
 	
 	        // Actually upload the data.
-	        fixed (int* ptrScreen = ScreenBuffer)
+	        fixed (int* ptrScreen = buffer)
 		    {
 		    	Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, Width, Height, 0, Gl.GL_BGRA, Gl.GL_UNSIGNED_BYTE, new IntPtr((void*)ptrScreen));
        	    }
+       	    buffer = new int[(Width)*(Height)];
         }
 
         private int OnWindowClose()

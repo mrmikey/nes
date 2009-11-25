@@ -92,9 +92,11 @@ namespace NES
 			while (Running)
 			{
 				// Accuracy can be up to 6/7 cycles out if they access Registers! HM. Todo
-				int cpuCycles = CPU.Run();
+				int cpuCycles = 0;
+				for (int i = 0; i < 100; i++)
+					cpuCycles += CPU.Run();
 				PPU.Run(cpuCycles);
-				APU.Run(cpuCycles);
+				//APU.Run(cpuCycles);
 			}
 			
 			Graphics.Deinitialise();

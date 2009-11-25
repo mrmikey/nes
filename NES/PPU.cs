@@ -19,8 +19,8 @@ namespace NES
 		public int VBlankTime = 70; // Number of Scanlines we're in VBlank for [PAL; NTSC is 20]
 		public int CurrentScaline = -1; // Pre-draw
 		public int VBlankAt = 240; // Scanline to start VBlank at
-		public int EndScanline = 900; // PAL... hardcode for now, should use VBlankTime todo
-		
+		public int EndScanline = 500; // PAL... hardcode for now, should use VBlankTime todo
+		public int CurrentSprite = 0;
 	//	private byte[,] PatternTables = new byte[2, 0x1000];
 		private byte[] SpriteRAM = new byte[256];
 		private byte[] Palettes = new byte[0x20];
@@ -37,7 +37,7 @@ namespace NES
 			0xF3BF3F, 0x83D313, 0x4FDF4B, 0x58F898, 0x00EBDB, 0x000000, 0x000000, 0x000000,
 			0xFFFFFF, 0xABE7FF, 0xC7D7FF, 0xD7CBFF, 0xFFC7FF, 0xFFC7DB, 0xFFBFB3, 0xFFDBAB,
 			0xFFE7A3, 0xE3FFA3, 0xABF3BF, 0xB3FFCF, 0x9FFFF3, 0x000000, 0x000000, 0x000000 };
-
+			
 		private Mirroring mirroring = Mirroring.Horizontal;
 		public Mirroring Mirroring
 		{
@@ -60,7 +60,7 @@ namespace NES
 		public PPU(Engine engine)
 		{
 			this.Engine = engine;
-			
+			this.dumpSprite = new SpriteDumpFunc(dumpSpriteSmall);
 			// Attribute Lookup Tables
 		 	for (int i = 0; i != 0x400; ++i)
 		    {
@@ -90,10 +90,56 @@ namespace NES
 				int x = i & 31; // bits 0-4 are x-scroll
 				int y = (i & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 				y = (y > 29) ? 29 : y;
-				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 				if (tile > 0)
 					Console.ReadKey();
 			}
+		}
+
+		private delegate void SpriteDumpFunc(int i);
+		private SpriteDumpFunc dumpSprite;
+		
+		public void dumpSpriteSmall(int i)
+		{
+				byte y = (byte)(SpriteRAM[i]+1);
+				
+				if (y >= 0xF0)
+					return;
+					
+				byte tile = SpriteRAM[i+1];
+				byte table = Flags.SprTable;
+				
+				byte palette = (byte)(SpriteRAM[i+2] & 3);
+				// ignore priority
+				// ignore flipping horiz/vert
+				byte x = SpriteRAM[i+3];
+				
+				// DRAW BIZNITCH
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, (256 * table) + tile, x, y, palette);
+		}
+
+		public void dumpSpriteTall(int i)
+		{	
+				throw new NotImplementedException();
+		
+				byte y = (byte)(SpriteRAM[i]+1);
+				
+				if (y >= 0xF0)
+					return;
+				
+				// Get tile number -- eventually move this if out of the loop!
+
+
+				byte tile = (byte)(SpriteRAM[i+1] >> 1);
+				byte table = (byte)(SpriteRAM[i+1] & 1);
+				
+				byte palette = (byte)(SpriteRAM[i+2] & 3);
+				// ignore priority
+				// ignore flipping horiz/vert
+				byte x = SpriteRAM[i+3];
+				
+				// DRAW BIZNITCH
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprLowBuffer, (256 * table) + tile, x, y, palette);
 		}
 
 		public void Run(int cpuCycles)
@@ -130,20 +176,34 @@ namespace NES
 					if (CurrentScaline == 241)
 					{
 						//dumpNametable();
+						//dumpSprites();
 						Engine.Graphics.Render();
 						Flags.Status |= 0x80; // Set VBlank flag in $2002
 						Engine.CPU.NMI = ((Flags.Control1 & 0x80) > 1) ? true : false; // Only trigger NMI if they want us to in $2000
 						Flags.SprAddr = 0; // Gets reset at end of frame
 						Engine.CPU.Flags.InterruptDisable = true; // Set NMI
+						Engine.CPU.SinceLastVBlank = 0;
 					} else if (CurrentScaline == EndScanline)
 					{
 						CurrentScaline = -1;
+						CurrentSprite = 0;
+						if (Flags.TallSprites)
+							dumpSprite = new SpriteDumpFunc(dumpSpriteTall);
+						else
+							dumpSprite = new SpriteDumpFunc(dumpSpriteSmall);
 						// todo: this.Rendering, and short scanlines
 					}
 				} else if ((CurrentScaline < 0) && (Cycle == 1))
 				{
 					// VBlank gets cleared at cycle 1 of scanline -1
 					Flags.Status = 0; // ALL 0?!
+				}
+				
+				// Sprites!
+				if ((CurrentSprite < 32) && (CurrentScaline > 0))
+				{
+					dumpSprite(CurrentSprite * 4);
+					CurrentSprite++;
 				}
 				
 				// :D
@@ -186,7 +246,7 @@ namespace NES
 							int x = Flags.Loopy_V & 31; // bits 0-4 are x-scroll
 							int y = (Flags.Loopy_V & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 							y = (y > 29) ? 29 : y;
-							Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+							Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.BGBuffer, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 							
 							
 							break;
@@ -254,7 +314,7 @@ namespace NES
 				}
 			}
 		}
-	
+	/*
 		public void InitialiseCHRCache(byte[][] CHRROMs)
 		{
 			CHRCache = new byte[CHRROMs.Length * 64 * 0x100];
@@ -280,7 +340,7 @@ namespace NES
 				}
 			}
 		}
-		
+		*/
 		# region Read/Write
 		
 		// VRAMRead is for $2007 read, with first garbage data (hence le buffer)

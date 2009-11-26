@@ -23,7 +23,7 @@ namespace NES
 	    public delegate void KeyEventDelegate(Key Key);
 	
 		// A, B, Select, Start, Up, Down, Left, Right
-		public int[] Keys = new int[] { 97, 115, Glfw.GLFW_KEY_LALT, Glfw.GLFW_KEY_SPACE, Glfw.GLFW_KEY_UP, Glfw.GLFW_KEY_DOWN, Glfw.GLFW_KEY_LEFT, Glfw.GLFW_KEY_RIGHT };
+		public int[] Keys = new int[] { 65, 83, Glfw.GLFW_KEY_LALT, Glfw.GLFW_KEY_SPACE, Glfw.GLFW_KEY_UP, Glfw.GLFW_KEY_DOWN, Glfw.GLFW_KEY_LEFT, Glfw.GLFW_KEY_RIGHT };
 	
 		public Joypads()
 		{
@@ -62,7 +62,7 @@ namespace NES
             else if (down == 0 && KeyUp != null)
                 KeyUp((Key)keyValue);
 
-            //Log.i("Key" + (down == 1 ? "Down" : "Up") + ": " + ((Key)keyValue).ToString());
+            Console.WriteLine("Key" + (down == 1 ? "Down" : "Up") + ": " + ((Key)keyValue).ToString());
         }
 		
 		// Read and Writes to $4016/$4017

@@ -111,7 +111,88 @@ namespace NES
             Glfw.glfwTerminate();
         }
         
-        public void DrawTile(byte[] bank, int[] buffer, int tileNo, int X, int Y, int attribute)
+        public void DrawTileVertFlip(byte[] bank, int[] buffer, int sprPalette, int tileNo, int X, int Y, int attribute)
+        {
+        	int offset = tileNo * 16;
+        	for (int y = 7; y >= 0; y--)
+        	{
+        		byte scanLower = bank[offset + y + 8];
+        		byte scanUpper = bank[offset + y];
+        		for (int x = 0; x < 8; x++)
+        		{
+        			byte lower = (byte)(((scanLower >> (7 ^ x)) & 1) << 1);
+        			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 0);
+        			int palIndex =  sprPalette | lower | upper | attribute;
+        			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
+	        		
+	        		// Can draw outside range
+	        		try
+	        		{
+	        			buffer[(((7-y)+Y)*Width)+(x+X)] = ((lower|upper) == 0) ? 0 : (int)(color|0xFF000000);
+	        		}
+	        		catch (IndexOutOfRangeException e)
+	        		{
+	        			Log.w("Ignoring drawing done out of bounds.");
+	        		}
+        		}
+        	}
+        }
+        
+        public void DrawTileHorizFlip(byte[] bank, int[] buffer, int sprPalette, int tileNo, int X, int Y, int attribute)
+        {
+        	int offset = tileNo * 16;
+        	for (int y = 0; y < 8; y++)
+        	{
+        		byte scanLower = bank[offset + y + 8];
+        		byte scanUpper = bank[offset + y];
+        		for (int x = 7; x >= 0; x--)
+        		{
+        			byte lower = (byte)(((scanLower >> (7 ^ x)) & 1) << 1);
+        			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 0);
+        			int palIndex =  sprPalette | lower | upper | attribute;
+        			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
+	        		
+	        		// Can draw outside range
+	        		try
+	        		{
+	        			buffer[((y+Y)*Width)+((7-x)+X)] = ((lower|upper) == 0) ? 0 : (int)(color|0xFF000000);
+	        		}
+	        		catch (IndexOutOfRangeException e)
+	        		{
+	        			Log.w("Ignoring drawing done out of bounds.");
+	        		}
+        		}
+        	}
+        }
+        
+        public void DrawTileBothFlip(byte[] bank, int[] buffer, int sprPalette, int tileNo, int X, int Y, int attribute)
+        {
+        	int offset = tileNo * 16;
+        	for (int y = 7; y >= 0; y--)
+        	{
+        		byte scanLower = bank[offset + y + 8];
+        		byte scanUpper = bank[offset + y];
+        		for (int x = 7; x >= 0; x--)
+        		{
+        			byte lower = (byte)(((scanLower >> (7 ^ x)) & 1) << 1);
+        			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 0);
+        			int palIndex =  sprPalette | lower | upper | attribute;
+        			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
+	        		
+	        		// Can draw outside range
+	        		try
+	        		{
+	        			buffer[(((7-y)+Y)*Width)+((7-x)+X)] = ((lower|upper) == 0) ? 0 : (int)(color|0xFF000000);
+	        		}
+	        		catch (IndexOutOfRangeException e)
+	        		{
+	        			Log.w("Ignoring drawing done out of bounds.");
+	        		}
+        		}
+        	}
+        }
+  
+        public void DrawTile(byte[] bank, int[] buffer, int sprPalette, int tileNo, int X, int Y, int attribute)
         {
         	int offset = tileNo * 16;
         	for (int y = 0; y < 8; y++)
@@ -120,9 +201,9 @@ namespace NES
         		byte scanUpper = bank[offset + y];
         		for (int x = 0; x < 8; x++)
         		{
-        			byte lower = (byte)((scanLower >> (7 ^ x)) & 1);
-        			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 1);
-        			int palIndex = lower | upper | attribute;
+        			byte lower = (byte)(((scanLower >> (7 ^ x)) & 1) << 1);
+        			byte upper = (byte)(((scanUpper >> (7 ^ x)) & 1) << 0);
+        			int palIndex = sprPalette | lower | upper | attribute;
         			int color = Engine.PPU.Palette[Engine.PPU.ReadMemory8((ushort)(0x3F00 | palIndex))];
 	        		
 	        		// Can draw outside range
@@ -136,7 +217,6 @@ namespace NES
 	        		}
         		}
         	}
-
         }
         
         
@@ -145,7 +225,7 @@ namespace NES
         public void Render()
         {
             DateTime dtStart = DateTime.Now;
-			//Console.WriteLine("{0} milliseconds since last render.", (DateTime.Now - lastRender).TotalMilliseconds);
+			Console.WriteLine("{0} milliseconds since last render.", (DateTime.Now - lastRender).TotalMilliseconds);
 			lastRender = dtStart;
 			
 		//	Console.WriteLine(String.Format("{0:x} {1:x}", Engine.ReadMemory8(0x00), Engine.ReadMemory8(0x44)));
@@ -207,7 +287,7 @@ namespace NES
 
 				// Debug
                 DateTime dtEnd = DateTime.Now;
-                 //   Console.WriteLine((dtEnd - dtStart).TotalMilliseconds.ToString() + "ms to render");
+                //Console.WriteLine((dtEnd - dtStart).TotalMilliseconds.ToString() + "ms to render");
             }
         }
                 

@@ -90,7 +90,7 @@ namespace NES
 				int x = i & 31; // bits 0-4 are x-scroll
 				int y = (i & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 				y = (y > 29) ? 29 : y;
-				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, 0, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 				if (tile > 0)
 					Console.ReadKey();
 			}
@@ -101,23 +101,38 @@ namespace NES
 		
 		public void dumpSpriteSmall(int i)
 		{
-				byte y = (byte)(SpriteRAM[i]+1);
+				int y = SpriteRAM[i]+1;
 				
 				if (y >= 0xF0)
 					return;
 					
 				byte tile = SpriteRAM[i+1];
 				byte table = Flags.SprTable;
+				int palette = (SpriteRAM[i+2] & 3) << 2;
 				
-				byte palette = (byte)(SpriteRAM[i+2] & 3);
 				// ignore priority
 				// ignore flipping horiz/vert
 				byte x = SpriteRAM[i+3];
 				
-				// DRAW BIZNITCH
-				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, (256 * table) + tile, x, y, palette);
+				// Handle Flipping and Render! [Upper two bits of byte 2; MSB is vert flip]
+				int flipping = SpriteRAM[i+2] & 0xC0;
+				switch (flipping)
+				{
+					case 0xC0: // 11 - Both
+						Engine.Graphics.DrawTileBothFlip(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, 0x10, (256 * table) + tile, x, y, palette);
+						break;
+					case 0x80: // 10 - Vert
+						Engine.Graphics.DrawTileVertFlip(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, 0x10, (256 * table) + tile, x, y, palette);
+						break;
+					case 0x40: // 01 - Horiz
+						Engine.Graphics.DrawTileHorizFlip(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, 0x10, (256 * table) + tile, x, y, palette);
+						break;
+					case 0:
+						Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprHighBuffer, 0x10, (256 * table) + tile, x, y, palette);
+						break;
+				} // yum, efficient.
 		}
-
+		
 		public void dumpSpriteTall(int i)
 		{	
 				throw new NotImplementedException();
@@ -139,7 +154,7 @@ namespace NES
 				byte x = SpriteRAM[i+3];
 				
 				// DRAW BIZNITCH
-				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprLowBuffer, (256 * table) + tile, x, y, palette);
+				Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.SprLowBuffer, 0x10, (256 * table) + tile, x, y, palette);
 		}
 
 		public void Run(int cpuCycles)
@@ -246,7 +261,7 @@ namespace NES
 							int x = Flags.Loopy_V & 31; // bits 0-4 are x-scroll
 							int y = (Flags.Loopy_V & 0x3E0) >> 5; // bits 5-9 are y-scroll.
 							y = (y > 29) ? 29 : y;
-							Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.BGBuffer, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
+							Engine.Graphics.DrawTile(Engine.Cartridge.CHRBanks[0], Engine.Graphics.BGBuffer, 0, (256 * Flags.BGTable) + tile, x*8, y*8, attribute);
 							
 							
 							break;
